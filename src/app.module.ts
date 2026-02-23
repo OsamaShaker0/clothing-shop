@@ -1,10 +1,51 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+import { ProductModule } from './product/product.module';
+import { CategoryModule } from './category/category.module';
+import { CartModule } from './cart/cart.module';
+import { OrderModule } from './order/order.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import databaseConfig from './config/database.config';
+import environmentValidations from './config/environment.validations';
+
+let ENV = process.env.NODE_ENV;
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: !ENV ? '.env' : `.env.${ENV}`,
+      load: [databaseConfig],
+      validationSchema: environmentValidations,
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: configService.get<'postgres'>('DATABASE_TYPE'),
+        host: configService.get<string>('DATABASE_HOST'),
+        port: parseInt(
+          configService.get<string>('DATABASE_PORT') || '5432',
+          10,
+        ),
+        username: configService.get<string>('DATABASE_USERNAME'),
+        password: configService.get<string>('DATABASE_PASSWORD'),
+        database: configService.get<string>('DATABASE_NAME'),
+        autoLoadEntities:
+          configService.get<string>('DATABASE_AUTO_LOAD_ENTITIES') === 'true',
+        synchronize: true,
+      }),
+    }),
+    AuthModule,
+    UserModule,
+    ProductModule,
+    CategoryModule,
+    CartModule,
+    OrderModule,
+  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
