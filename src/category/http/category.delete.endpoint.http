@@ -1,0 +1,4 @@
+## delete category
+
+
+DELETE http://localhost:3000/category/a6fd4d12-045e-45bf-a33f-5590a8cde655 HTTP/1.1

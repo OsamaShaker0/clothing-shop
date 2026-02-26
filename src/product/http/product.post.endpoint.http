@@ -1,0 +1,12 @@
+## create product 
+
+POST http://localhost:3000/products
+Content-Type : application/json
+
+{
+    "name" :"product 1" , 
+    "slug" : "product_1",
+    "description" : "this is the description for product one ",
+    "price" : 120,
+    "categoryId" : "54f396cc-c4d7-4ea5-bc5d-ed950a04715d"
+}

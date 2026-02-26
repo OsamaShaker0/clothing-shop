@@ -1,0 +1,36 @@
+import { Injectable } from '@nestjs/common';
+import { CreateCategoryProvider } from './create-category.provider';
+import { CreateCategoryDto } from '../dtos/create-category.dto';
+import { Category } from '../categories.entity';
+import { FindCategoryDto } from '../dtos/find-all-query.dto';
+import { EditCategoryDto } from '../dtos/edit-category.dto';
+import { GetCategoriesProvider } from './get-categories.provider';
+import { GetOneCategoryProvider } from './get-one-category.provider';
+import { UpdateCategoryProvider } from './update-category.provider';
+import { DeleteCategoryProvider } from './delete-category.provider';
+
+@Injectable()
+export class CategoryService {
+  constructor(
+    private readonly createCategoryProvider: CreateCategoryProvider,
+    private readonly getCategoriesProvider: GetCategoriesProvider,
+    private readonly getOneCategoryProvider: GetOneCategoryProvider,
+    private readonly updateCategoryProvider: UpdateCategoryProvider,
+    private readonly deleteCategoryProvider: DeleteCategoryProvider,
+  ) {}
+  public async createCatgeory(createCategoryDto: CreateCategoryDto) {
+    return this.createCategoryProvider.createCategory(createCategoryDto);
+  }
+  public async findAllCategories(findCategoryDto: FindCategoryDto) {
+    return this.getCategoriesProvider.findAllCategories(findCategoryDto);
+  }
+  public async findOneCategoryById(id: string): Promise<Category> {
+    return await this.getOneCategoryProvider.findOneCategoryById(id);
+  }
+  public async editCategory(id: string, editCategoryDto: EditCategoryDto) {
+    return this.updateCategoryProvider.updateCategory(id, editCategoryDto);
+  }
+  public async deleteCategory(id: string) {
+    return this.deleteCategoryProvider.deleteCategoty(id);
+  }
+}

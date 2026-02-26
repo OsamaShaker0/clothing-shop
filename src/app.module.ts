@@ -34,7 +34,7 @@ let ENV = process.env.NODE_ENV;
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
         autoLoadEntities:
-          configService.get<string>('DATABASE_AUTO_LOAD_ENTITIES') === 'true',
+          configService.get<boolean>('DATABASE_AUTO_LOAD_ENTITIES') === true,
         synchronize: true,
       }),
     }),
