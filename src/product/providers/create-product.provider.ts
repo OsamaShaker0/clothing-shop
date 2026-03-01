@@ -18,29 +18,34 @@ export class CreateProductProvider {
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
   ) {}
+
   public async createProduct(createProductDto: CreateProductDto) {
     try {
-      let categoryId = createProductDto.categoryId;
-      let category = await this.categoryRepository.findOneBy({
-        id: categoryId,
+      const { categoryId, ...productData } = createProductDto;
+
+      const category = await this.categoryRepository.findOne({
+        where: { id: categoryId },
       });
+
       if (!category) {
         throw new BadRequestException(
-          `You try adding product to non existing category `,
+          'You are trying to add a product to a non-existing category',
         );
       }
 
-      let product = this.productRepository.create(createProductDto);
-      product.category = category;
-      product = await this.productRepository.save(product);
-      return product;
+      const product = this.productRepository.create({
+        ...productData,
+        category,
+      });
+
+      return await this.productRepository.save(product);
     } catch (error) {
-      if (error.code === '23505') {
+      if (error?.code === '23505') {
         throw new ConflictException('Slug already exists');
       }
+
       throw new InternalServerErrorException(
-        'Cannot create category, please try again later',
-        { description: error },
+        'Cannot create product, please try again later',
       );
     }
   }

@@ -1,4 +1,18 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+  IsUUID,
+  Min,
+} from 'class-validator';
+import { GenderEnum } from '../enums/product-gender.enum';
+import { Type } from 'class-transformer';
+import { ProductTypeEnum } from '../enums/product-type.enum';
 
 export class CreateProductDto {
   @IsString()
@@ -22,15 +36,26 @@ export class CreateProductDto {
   @IsOptional()
   priceAfterDiscount?: number;
 
-  @IsString()
   @IsOptional()
-  image?: string;
-
+  @IsUrl()
+  image?: string[];
+  @IsNotEmpty()
+  @IsEnum(ProductTypeEnum, {
+    message: 'product type must be one of: trousers,shirt, dress,skirt,others',
+  })
+  productType: ProductTypeEnum;
   @IsBoolean()
   @IsOptional()
   isActive?: boolean;
 
   @IsUUID()
   @IsNotEmpty()
-  categoryId: string; 
+  categoryId: string;
+  @IsNotEmpty()
+  @IsEnum(GenderEnum, { message: 'gender must be one of: male, female, both' })
+  gender: GenderEnum;
+  @IsNotEmpty()
+  @IsInt()
+  @Type(() => Number)
+  stock: number;
 }

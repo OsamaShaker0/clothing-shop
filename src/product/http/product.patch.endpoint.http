@@ -1,0 +1,8 @@
+## Update product 
+
+PATCH http://localhost:3000/products/4551591a-6182-43b6-90fe-7bb4dc1866d1
+Content-Type :application/json
+
+{
+    "slug":"update-product-slug"
+}

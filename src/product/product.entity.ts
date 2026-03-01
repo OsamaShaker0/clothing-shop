@@ -8,6 +8,8 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
 } from 'typeorm';
+import { GenderEnum } from './enums/product-gender.enum';
+import { ProductTypeEnum } from './enums/product-type.enum';
 
 @Entity()
 export class Product {
@@ -15,7 +17,7 @@ export class Product {
   id: string;
   @Column()
   name: string;
-  @Column({unique:true})
+  @Column({ unique: true })
   slug: string;
   @Column({ type: 'text' })
   description: string;
@@ -23,8 +25,8 @@ export class Product {
   price: number;
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   priceAfterDiscount: number;
-  @Column({ nullable: true })
-  image: string;
+  @Column({ type: 'json', nullable: true })
+  image: string[];
   @Column({ default: true })
   isActive: boolean;
   @ManyToOne(() => Category, (category) => category.products, {
@@ -33,6 +35,20 @@ export class Product {
     eager: true,
   })
   category: Category;
+
+  @Column({
+    type: 'enum',
+    enum: GenderEnum,
+    default: GenderEnum.BOTH,
+  })
+  gender: GenderEnum;
+  @Column({
+    type: 'enum',
+    enum: ProductTypeEnum,
+  })
+  productType: ProductTypeEnum;
+  @Column()
+  stock: number;
   @CreateDateColumn()
   createdAt: Date;
 

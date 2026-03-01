@@ -4,9 +4,9 @@ POST http://localhost:3000/products
 Content-Type : application/json
 
 {
-    "name" :"product 1" , 
-    "slug" : "product_1",
-    "description" : "this is the description for product one ",
+    "name" :"product three" , 
+    "slug" : "product_three",
+    "description" : "this is the description for product three ",
     "price" : 120,
-    "categoryId" : "54f396cc-c4d7-4ea5-bc5d-ed950a04715d"
+    "categoryId" : "5fa39d22-e528-4672-a462-3859b8993987"
 }

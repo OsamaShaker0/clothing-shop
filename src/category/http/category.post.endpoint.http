@@ -4,8 +4,8 @@ POST http://localhost:3000/category
 Content-Type:application/json
 
 {
-    "name" : "categoryOne",
-    "slug" : "category_1",
-    "description": "this is category one"
+    "name" : "categorythree",
+    "slug" : "category_3",
+    "description": "this is category three"
 
 }

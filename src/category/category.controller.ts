@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -27,12 +28,12 @@ export class CategoryController {
     return this.categoryService.findAllCategories(findCategoryDto);
   }
   @Get(':id')
-  public async findCategoryById(@Param('id') id: string) {
+  public async findCategoryById(@Param('id',new ParseUUIDPipe()) id: string) {
     return this.categoryService.findOneCategoryById(id);
   }
   @Patch(':id') // only admin can access
   public async PatchCategory(
-    @Param('id') id: string,
+    @Param('id',new ParseUUIDPipe()) id: string,
     @Body() editCaregoryDto: EditCategoryDto,
   ) {
     return this.categoryService.editCategory(id, editCaregoryDto);
@@ -40,7 +41,7 @@ export class CategoryController {
 
   @Delete(':id') // only admin can access
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async deleteCategory(@Param('id') id: string) {
+  public async deleteCategory(@Param('id',new ParseUUIDPipe()) id: string) {
     return this.categoryService.deleteCategory(id);
   }
 }
