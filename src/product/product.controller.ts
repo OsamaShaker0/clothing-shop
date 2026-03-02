@@ -8,19 +8,23 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProductService } from './providers/product.service';
 import { CreateProductDto } from './dtos/create-product.dto';
 import { FindAllProductsDto } from './dtos/find-all-products.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
 import { GetProductsByCategoryIdDto } from './dtos/get-products-by-category-id.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
-  @Post()
-  public async createProduct(@Body() createProductDto: CreateProductDto) {
-    return this.productService.createProduct(createProductDto);
+  @Post()   // only admin can do this 
+  @UseInterceptors(FilesInterceptor('images' , 10))
+  public async createProduct(@Body() createProductDto: CreateProductDto ,  @UploadedFiles() files: Express.Multer.File[]) {
+    return this.productService.createProduct(createProductDto , files);
   }
   @Get()
   public async findAllProducts(

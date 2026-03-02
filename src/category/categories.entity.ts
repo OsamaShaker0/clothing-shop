@@ -21,7 +21,7 @@ export class Category {
   @Column({ type: 'text', nullable: false })
   description: string;
   @Column({ nullable: true })
-  photo: string;
+  imageUrl: string;
   @OneToMany(() => Product, (product) => product.category)
   products: Product[];
   //   @ManyToOne(() => Category, (category) => category.children, {

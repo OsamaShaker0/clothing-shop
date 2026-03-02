@@ -29,6 +29,7 @@ export class CreateProductDto {
 
   @IsNumber()
   @Min(0)
+  @Type(()=>Number)
   price: number;
 
   @IsNumber()
@@ -38,7 +39,7 @@ export class CreateProductDto {
 
   @IsOptional()
   @IsUrl()
-  image?: string[];
+  imagesUrl?: string[];
   @IsNotEmpty()
   @IsEnum(ProductTypeEnum, {
     message: 'product type must be one of: trousers,shirt, dress,skirt,others',

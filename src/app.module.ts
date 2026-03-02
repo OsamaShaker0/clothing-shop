@@ -7,8 +7,10 @@ import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import databaseConfig from './config/database.config';
 import environmentValidations from './config/environment.validations';
+import cloudinaryConfig from './config/cloudinary.config';
 
 let ENV = process.env.NODE_ENV;
 
@@ -17,7 +19,7 @@ let ENV = process.env.NODE_ENV;
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: !ENV ? '.env' : `.env.${ENV}`,
-      load: [databaseConfig],
+      load: [databaseConfig , cloudinaryConfig],
       validationSchema: environmentValidations,
     }),
     TypeOrmModule.forRootAsync({
@@ -44,6 +46,7 @@ let ENV = process.env.NODE_ENV;
     CategoryModule,
     CartModule,
     OrderModule,
+    CloudinaryModule,
   ],
   controllers: [],
   providers: [],

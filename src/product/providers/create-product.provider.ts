@@ -9,6 +9,8 @@ import { Product } from '../product.entity';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from '../dtos/create-product.dto';
 import { Category } from 'src/category/categories.entity';
+import { CloudinaryService } from 'src/cloudinary/providers/cloudinary.service';
+import { FileEnumerator } from 'eslint/use-at-your-own-risk';
 
 @Injectable()
 export class CreateProductProvider {
@@ -17,9 +19,17 @@ export class CreateProductProvider {
     private readonly productRepository: Repository<Product>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  public async createProduct(createProductDto: CreateProductDto) {
+  public async createProduct(
+    createProductDto: CreateProductDto,
+    files: Express.Multer.File[],
+  ) {
+    const uploadedImages =
+      await this.cloudinaryService.uploadMultipleImages(files);
+
+    createProductDto.imagesUrl = uploadedImages.map((img) => img.imageUrl);
     try {
       const { categoryId, ...productData } = createProductDto;
 
@@ -40,6 +50,11 @@ export class CreateProductProvider {
 
       return await this.productRepository.save(product);
     } catch (error) {
+      await Promise.all(
+        uploadedImages.map((img) =>
+          this.cloudinaryService.deleteImage(img.publicId),
+        ),
+      );
       if (error?.code === '23505') {
         throw new ConflictException('Slug already exists');
       }

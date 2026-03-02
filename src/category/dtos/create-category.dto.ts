@@ -26,7 +26,7 @@ export class CreateCategoryDto {
   description: string;
   @IsUrl()
   @IsOptional()
-  photo: string;
+  imageUrl: string;
 
   @IsBoolean()
   @IsOptional()

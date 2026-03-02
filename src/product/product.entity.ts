@@ -26,7 +26,7 @@ export class Product {
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   priceAfterDiscount: number;
   @Column({ type: 'json', nullable: true })
-  image: string[];
+  imagesUrl: string[];
   @Column({ default: true })
   isActive: boolean;
   @ManyToOne(() => Category, (category) => category.products, {

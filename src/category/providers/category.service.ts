@@ -18,8 +18,8 @@ export class CategoryService {
     private readonly updateCategoryProvider: UpdateCategoryProvider,
     private readonly deleteCategoryProvider: DeleteCategoryProvider,
   ) {}
-  public async createCatgeory(createCategoryDto: CreateCategoryDto) {
-    return this.createCategoryProvider.createCategory(createCategoryDto);
+  public async createCatgeory(createCategoryDto: CreateCategoryDto, file: Express.Multer.File,) {
+    return this.createCategoryProvider.createCategory(createCategoryDto , file);
   }
   public async findAllCategories(findCategoryDto: FindCategoryDto) {
     return this.getCategoriesProvider.findAllCategories(findCategoryDto);
