@@ -1,0 +1,13 @@
+
+
+
+# update user by id 
+
+PATCH http://localhost:3000/users/f55f14b7-e967-43a8-bb71-802b5365c806
+Content-Type: application/json
+
+{
+    "firstName" : "updated first name",
+    "lastName" : "last name",
+    "email"  : "o@gmail.com"
+}

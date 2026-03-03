@@ -1,0 +1,3 @@
+## delete user by id 
+
+DELETE http://localhost:3000/users/f55f14b7-e967-43a8-bb71-802b5365c806

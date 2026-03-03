@@ -1,0 +1,13 @@
+
+## create Users
+
+POST http://localhost:3000/users
+Content-Type : application/json
+
+{
+    "firstName" : "osama",
+    "lastName"  :"shaker",
+    "email" : "osama@test.com",
+    "password" : "Password1@",
+    "gender" : "male"
+}
