@@ -11,11 +11,10 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
-import { UserGender } from '../enums/user-gender.enum';
+import { UserGender } from 'src/user/enums/user-gender.enum';
 import { Type } from 'class-transformer';
-import { UserRole } from '../enums/user-roles.enum';
 
-export class CreateUserDto {
+export class SignInDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
@@ -40,9 +39,6 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsEnum(UserGender)
   gender: UserGender;
-  @IsNotEmpty()
-  @IsEnum(UserRole)
-  role: UserRole;
   @IsOptional()
   @IsInt()
   @Min(0)

@@ -1,4 +1,5 @@
 ## delete category
 
 
-DELETE http://localhost:3000/category/a6fd4d12-045e-45bf-a33f-5590a8cde655 HTTP/1.1
+DELETE http://localhost:3000/category/54d309aa-d718-4137-ae14-b2b39cddba6c HTTP/1.1
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzdjZDNjNi00ODE0LTQ3NGItOGExMC0zODEwMGJjNzRkZGIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzI2NTM4NTksImV4cCI6MTc3Mjc0MDI1OSwiYXVkIjoibG9jYWxob3N0OjMwMDAiLCJpc3MiOiJsb2NhbGhvc3Q6MzAwMCJ9.hGnFxZC1uUwqv3g2LFUARXfRQiC8DF73TmTF8Yg_Y5k

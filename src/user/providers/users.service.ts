@@ -23,6 +23,9 @@ export class UsersService {
   public getOneUserById(id: string) {
     return this.getOneUserProvider.getOneUserById(id);
   }
+   public getOneUserByEmil(email: string) {
+    return this.getOneUserProvider.getOneUserByEmail(email);
+  }
   public async createUser(createUserDto: CreateUserDto) {
     return this.createUsersProvider.createUser(createUserDto);
   }

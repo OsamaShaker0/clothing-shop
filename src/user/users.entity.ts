@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { UserGender } from './enums/user-gender.enum';
 import { UserRole } from './enums/user-roles.enum';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Users {
@@ -22,6 +23,7 @@ export class Users {
   @Column({ default: false })
   isEmailVerified: boolean;
   @Column({ type: 'varchar' })
+  @Exclude()
   password: string;
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
   role: UserRole;

@@ -1,0 +1,16 @@
+## sign in new user 
+
+POST http://localhost:3000/auth/signin
+Content-Type  : application/json
+
+{
+    "firstName" : "ammar",
+    "lastName" : "ibrahim",
+    "email" : "ammar@gmail.com",
+    "password" : "Password1@",
+    "gender" : "male",
+    "age" : 17,
+    "governorate" : "cairo",
+    "role" : "admin"
+
+}

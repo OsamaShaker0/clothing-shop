@@ -1,3 +1,4 @@
 ## delete user by id 
 
-DELETE http://localhost:3000/users/f55f14b7-e967-43a8-bb71-802b5365c806
+DELETE http://localhost:3000/users/fecffd93-69af-4d36-baf5-00415d734fe9
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmZWNmZmQ5My02OWFmLTRkMzYtYmFmNS0wMDQxNWQ3MzRmZTkiLCJyb2xlIjoidXNlciIsImlhdCI6MTc3MjY1MzQxOCwiZXhwIjoxNzcyNzM5ODE4LCJhdWQiOiJsb2NhbGhvc3Q6MzAwMCIsImlzcyI6ImxvY2FsaG9zdDozMDAwIn0.OgMZj3IynWvp6OK470oHm37wm90IMm2AXNwNC-uaBzw

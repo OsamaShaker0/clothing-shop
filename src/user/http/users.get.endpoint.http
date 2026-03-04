@@ -3,7 +3,9 @@
 ## get all users 
 
 GET http://localhost:3000/users
+Authorization : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzdjZDNjNi00ODE0LTQ3NGItOGExMC0zODEwMGJjNzRkZGIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzI2NTE3MTIsImV4cCI6MTc3MjczODExMiwiYXVkIjoibG9jYWxob3N0OjMwMDAiLCJpc3MiOiJsb2NhbGhvc3Q6MzAwMCJ9.LMYCV629tAzAoAn7X09CCbqVQpQX5k0GDphRg81_OfY
 
 ## get one user by id 
 
-GET http://localhost:3000/users/f55f14b7-e967-43a8-bb71-802b5365c803
+GET http://localhost:3000/users/742e7908-3c86-46dd-b5b3-dc46255e9388
+Authorization :Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NDJlNzkwOC0zYzg2LTQ2ZGQtYjViMy1kYzQ2MjU1ZTkzODgiLCJyb2xlIjoibWFuYWdlciIsImlhdCI6MTc3MjY1MjcxMCwiZXhwIjoxNzcyNzM5MTEwLCJhdWQiOiJsb2NhbGhvc3Q6MzAwMCIsImlzcyI6ImxvY2FsaG9zdDozMDAwIn0.CFCiIN7ys0VoGGYXEV6F1o9hFQh5qBdP-ejN_FWdQq0

@@ -2,11 +2,14 @@
 
 POST http://localhost:3000/products
 Content-Type : application/json
-
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NDJlNzkwOC0zYzg2LTQ2ZGQtYjViMy1kYzQ2MjU1ZTkzODgiLCJyb2xlIjoibWFuYWdlciIsImlhdCI6MTc3MjY1MzY0MCwiZXhwIjoxNzcyNzQwMDQwLCJhdWQiOiJsb2NhbGhvc3Q6MzAwMCIsImlzcyI6ImxvY2FsaG9zdDozMDAwIn0.qzDGMz0qOLy3EJd9Q_HfswQPcl6BGZYzsiRtQi-lVe0
 {
     "name" :"product three" , 
     "slug" : "product_three",
     "description" : "this is the description for product three ",
     "price" : 120,
+    "productType" :"shirt",
+    "stock" :10,
+    "gender" : "male",
     "categoryId" : "5fa39d22-e528-4672-a462-3859b8993987"
 }

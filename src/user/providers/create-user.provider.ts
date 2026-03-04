@@ -7,12 +7,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from '../users.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
+import { HashingProvider } from 'src/auth/providers/hashing.provider';
 
 @Injectable()
 export class CreateUsersProvider {
   constructor(
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
+    private readonly hahsingProvider: HashingProvider,
   ) {}
   public async createUser(createUserDto: CreateUserDto) {
     try {
@@ -20,8 +22,12 @@ export class CreateUsersProvider {
         where: { email: createUserDto.email },
       });
       if (existingUsers) throw new ConflictException('Email already exists');
+      createUserDto.password = await this.hahsingProvider.hashPassword(
+        createUserDto.password,
+      );
       let user = this.usersRepository.create(createUserDto);
       user = await this.usersRepository.save(user);
+
       return user;
     } catch (error) {
       console.error(error);

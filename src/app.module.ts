@@ -11,6 +11,9 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import databaseConfig from './config/database.config';
 import environmentValidations from './config/environment.validations';
 import cloudinaryConfig from './config/cloudinary.config';
+import jwtConfig from './config/jwt.config';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/guards/auth.guard';
 
 let ENV = process.env.NODE_ENV;
 
@@ -19,7 +22,7 @@ let ENV = process.env.NODE_ENV;
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: !ENV ? '.env' : `.env.${ENV}`,
-      load: [databaseConfig , cloudinaryConfig],
+      load: [databaseConfig, cloudinaryConfig, jwtConfig],
       validationSchema: environmentValidations,
     }),
     TypeOrmModule.forRootAsync({
@@ -49,6 +52,6 @@ let ENV = process.env.NODE_ENV;
     CloudinaryModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [{ provide: APP_GUARD, useClass: AuthGuard }],
 })
 export class AppModule {}
