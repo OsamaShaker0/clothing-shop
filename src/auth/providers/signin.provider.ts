@@ -3,9 +3,8 @@ import { HashingProvider } from './hashing.provider';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'src/user/users.entity';
 import { Repository } from 'typeorm';
-import { SignInDto } from '../dtos/auth-signin.dto';
+import {  SignUpDto } from '../dtos/auth-signup.dto';
 import { GenerateJwtProvider } from './generate-jwt.provider';
-import { classToPlain } from 'class-transformer';
 
 @Injectable()
 export class SigninProvider {
@@ -13,19 +12,18 @@ export class SigninProvider {
     private readonly hashingProvider: HashingProvider,
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
-    private readonly generateJwtToken: GenerateJwtProvider,
   ) {}
-  public async signIn(signInDto: SignInDto) {
-    let user = await this.usersRepository.findOneBy({ email: signInDto.email });
+  public async signIn(signUpDto: SignUpDto) {
+    let user = await this.usersRepository.findOneBy({ email: signUpDto.email });
     if (user) {
       throw new BadRequestException('User is Exist ');
     }
-    signInDto.password = await this.hashingProvider.hashPassword(
-      signInDto.password,
+    signUpDto.password = await this.hashingProvider.hashPassword(
+      signUpDto.password,
     );
 
-    user = this.usersRepository.create(signInDto);
+    user = this.usersRepository.create(signUpDto);
     user = await this.usersRepository.save(user);
-    return classToPlain(user);
+    return user;
   }
 }

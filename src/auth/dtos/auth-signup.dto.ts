@@ -14,7 +14,7 @@ import {
 import { UserGender } from 'src/user/enums/user-gender.enum';
 import { Type } from 'class-transformer';
 
-export class SignInDto {
+export class SignUpDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
