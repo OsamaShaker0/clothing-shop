@@ -2,10 +2,13 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import type { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { Cart } from 'src/cart/cart.entity';
 import jwtConfig from 'src/config/jwt.config';
+import { UserRole } from 'src/user/enums/user-roles.enum';
 import { Users } from 'src/user/users.entity';
 
 @Injectable()
@@ -39,5 +42,22 @@ export class GenerateJwtProvider {
       audience: this.jwtConfigration.signOptions.audience,
       issuer: this.jwtConfigration.signOptions.issuer,
     });
+  }
+  public async checkForCartOwner(cart: Cart, authHeader?: string) {
+    const token = authHeader?.startsWith('Bearer ')
+      ? authHeader.split(' ')[1]
+      : undefined;
+
+    if (token) {
+      const payload = await this.verifyToken(token);
+
+      if (
+        payload.role !== UserRole.ADMIN &&
+        payload.sub !== cart.user?.id &&
+        payload.sub !== cart.guestId
+      ) {
+        throw new UnauthorizedException();
+      }
+    }
   }
 }

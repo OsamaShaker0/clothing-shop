@@ -33,7 +33,7 @@ export class GetOneUserProvider {
     try {
       const user = await this.usersRepository.findOneBy({ email });
       if (!user) {
-        throw new NotFoundException(`can not find user with id of ${email}`);
+        throw new NotFoundException(`can not find user with email of ${email}`);
       }
       return user;
     } catch (error) {

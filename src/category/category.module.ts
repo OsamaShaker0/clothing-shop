@@ -12,8 +12,15 @@ import { DeleteCategoryProvider } from './providers/delete-category.provider';
 
 @Module({
   controllers: [CategoryController],
-  providers: [CategoryService, CreateCategoryProvider, GetCategoriesProvider, GetOneCategoryProvider, UpdateCategoryProvider, DeleteCategoryProvider],
-  imports: [TypeOrmModule.forFeature([Category , Product])],
-  exports:[CategoryService]
+  providers: [
+    CategoryService,
+    CreateCategoryProvider,
+    GetCategoriesProvider,
+    GetOneCategoryProvider,
+    UpdateCategoryProvider,
+    DeleteCategoryProvider,
+  ],
+  imports: [TypeOrmModule.forFeature([Category, Product])],
+  exports: [CategoryService],
 })
 export class CategoryModule {}

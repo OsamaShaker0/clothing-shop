@@ -13,8 +13,17 @@ import { GetProductsByCategoryIdProvider } from './providers/get-products-by-cat
 import { CategoryModule } from 'src/category/category.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product, Category]) ,CategoryModule],
+  imports: [TypeOrmModule.forFeature([Product, Category]), CategoryModule],
   controllers: [ProductController],
-  providers: [CreateProductProvider, ProductService, GetProductsProvider, GetOneProductProvider, UpdateProductProvider,DeleteProductProvider, GetProductsByCategoryIdProvider],
+  exports: [ProductService],
+  providers: [
+    CreateProductProvider,
+    ProductService,
+    GetProductsProvider,
+    GetOneProductProvider,
+    UpdateProductProvider,
+    DeleteProductProvider,
+    GetProductsByCategoryIdProvider,
+  ],
 })
 export class ProductModule {}

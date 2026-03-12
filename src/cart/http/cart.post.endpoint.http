@@ -1,0 +1,15 @@
+## add product to cart 
+
+POST http://localhost:3000/cart/add
+Content-Type:application/json
+{
+
+"productId" :"f41c6dea-4628-409f-a6c8-8ebc2aad39ac" 
+
+}
+
+
+
+
+
+

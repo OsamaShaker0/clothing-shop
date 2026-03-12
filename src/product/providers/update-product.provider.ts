@@ -9,7 +9,6 @@ import { Product } from '../product.entity';
 import { UpdateProductDto } from '../dtos/update-product.dto';
 import { GetOneProductProvider } from './get-one-product.provider';
 
-
 @Injectable()
 export class UpdateProductProvider {
   constructor(

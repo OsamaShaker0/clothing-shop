@@ -11,6 +11,7 @@ import { AuthController } from './auth.controller';
 import { GenerateJwtProvider } from './providers/generate-jwt.provider';
 import { JwtModule } from '@nestjs/jwt';
 import jwtConfig from 'src/config/jwt.config';
+import { OwnerOrAdminGuard } from './guards/owner-admin.guard';
 @Module({
   providers: [
     AuthService,
@@ -18,10 +19,14 @@ import jwtConfig from 'src/config/jwt.config';
     LoginAuthProvider,
     SigninProvider,
     GenerateJwtProvider,
+    OwnerOrAdminGuard,
   ],
-  imports:[forwardRef(()=>UserModule) , TypeOrmModule.forFeature([Users]) ,  JwtModule.registerAsync(jwtConfig.asProvider())],
+  imports: [
+    forwardRef(() => UserModule),
+    TypeOrmModule.forFeature([Users]),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
+  ],
   controllers: [AuthController],
-  exports: [GenerateJwtProvider , HashingProvider]
-
+  exports: [GenerateJwtProvider, HashingProvider, OwnerOrAdminGuard],
 })
 export class AuthModule {}

@@ -49,7 +49,7 @@ export class CreateProductProvider {
 
       return await this.productRepository.save(product);
     } catch (error) {
-      console.error(error)
+      console.error(error);
       await Promise.all(
         uploadedImages.map((img) =>
           this.cloudinaryService.deleteImage(img.publicId),
@@ -58,10 +58,11 @@ export class CreateProductProvider {
       if (error?.code === '23505') {
         throw new ConflictException('Slug already exists');
       }
-      if(error instanceof BadRequestException) throw error 
+      if (error instanceof BadRequestException) throw error;
 
       throw new InternalServerErrorException(
-        'Cannot create product, please try again later',{description:String(error)}
+        'Cannot create product, please try again later',
+        { description: String(error) },
       );
     }
   }

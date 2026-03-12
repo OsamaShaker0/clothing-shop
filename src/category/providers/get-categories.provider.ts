@@ -11,29 +11,31 @@ export class GetCategoriesProvider {
     private readonly categoryRepository: Repository<Category>,
   ) {}
   public async findAllCategories(findCategoryDto: FindCategoryDto) {
-  try {
-    const page = findCategoryDto.page ?? 1;
-    const limit = findCategoryDto.limit ?? 10;
-    const skip = (page - 1) * limit;
+    try {
+      const page = findCategoryDto.page ?? 1;
+      const limit = findCategoryDto.limit ?? 10;
+      const skip = (page - 1) * limit;
 
-    const [categories, total] = await this.categoryRepository.findAndCount({
-      skip,
-      take: limit,
-      order: { name: 'ASC' },
-    });
+      const [categories, total] = await this.categoryRepository.findAndCount({
+        skip,
+        take: limit,
+        order: { name: 'ASC' },
+      });
 
-    return {
-      page,
-      limit,
-      total,
-      categories,
-    };
-  } catch (error) {
-    console.error(error);
-    throw new InternalServerErrorException('Something went wrong, try again', {
-      description: String(error),
-    });
+      return {
+        page,
+        limit,
+        total,
+        categories,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(
+        'Something went wrong, try again',
+        {
+          description: String(error),
+        },
+      );
+    }
   }
 }
-}
-

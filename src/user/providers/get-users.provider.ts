@@ -16,7 +16,7 @@ export class GetUsersProvider {
     const limit = getAllUsersDto.limit ?? 10;
     const skip = (page - 1) * limit;
     try {
-      const [users,total] = await this.usersRepository.findAndCount({
+      const [users, total] = await this.usersRepository.findAndCount({
         skip,
         take: limit,
         order: { firstName: 'ASC' },
@@ -24,8 +24,8 @@ export class GetUsersProvider {
       return {
         page,
         limit,
-        total , 
-        totalPages : Math.ceil(total/limit),
+        total,
+        totalPages: Math.ceil(total / limit),
         users,
       };
     } catch (error) {

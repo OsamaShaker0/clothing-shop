@@ -1,0 +1,7 @@
+
+
+###### get all items in the cart by cart id
+
+GET http://localhost:3000/cart/
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzdjZDNjNi00ODE0LTQ3NGItOGExMC0zODEwMGJjNzRkZGIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzMwNzYzMzUsImV4cCI6MTc3MzE2MjczNSwiYXVkIjoibG9jYWxob3N0OjMwMDAiLCJpc3MiOiJsb2NhbGhvc3Q6MzAwMCJ9.6M7At1zry0YpZRaLcmCNQkpCUsoOJ--0a7Q-t943Xo4
+

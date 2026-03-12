@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from '../product.entity';
 import { GetProductsByCategoryIdDto } from '../dtos/get-products-by-category-id.dto';
-import { Category } from 'src/category/categories.entity';
+
 import { CategoryService } from 'src/category/providers/category.service';
-import { take } from 'rxjs';
+
 @Injectable()
 export class GetProductsByCategoryIdProvider {
   constructor(
@@ -24,7 +24,7 @@ export class GetProductsByCategoryIdProvider {
     const limit = GetProductsByCategoryIdDto?.limit ?? 10;
     const skip = (page - 1) * limit;
     const [products, total] = await this.productRepository.findAndCount({
-      where: { category:{ id: category.id} },
+      where: { category: { id: category.id } },
       skip,
       take: limit,
       order: { name: 'ASC' },

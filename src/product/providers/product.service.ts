@@ -21,8 +21,11 @@ export class ProductService {
     private readonly getProductsByCatgeoryIdProvider: GetProductsByCategoryIdProvider,
   ) {}
 
-  public async createProduct(createProductDto: CreateProductDto , files : Express.Multer.File[]) {
-    return this.createProductProvider.createProduct(createProductDto , files);
+  public async createProduct(
+    createProductDto: CreateProductDto,
+    files: Express.Multer.File[],
+  ) {
+    return this.createProductProvider.createProduct(createProductDto, files);
   }
   public async getAllproducts(findAllProductsDto: FindAllProductsDto) {
     return this.getAllProductsProvider.getAllProducts(findAllProductsDto);

@@ -11,42 +11,51 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './providers/users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { GetAllUsersDto } from './dtos/get-all-users.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { UserRole } from './enums/user-roles.enum';
+import { AdminAccessOnlyGuard } from 'src/auth/guards/admin-access-only.guard';
+import { OwnerOrAdminGuard } from 'src/auth/guards/owner-admin.guard';
+import { OwnerCheck } from 'src/auth/decorators/owner-check.decorator';
 
-@Controller('users')
+import { Users } from './users.entity';
+
 @UseInterceptors(ClassSerializerInterceptor)
+@Controller('users')
 export class UserController {
   constructor(private readonly usersService: UsersService) {}
-  @Get() // only admin
-  @Roles(UserRole.ADMIN)
+  @Get()
+  @UseGuards(AdminAccessOnlyGuard)
   public async findAllUsers(@Query() getAllUsersDto: GetAllUsersDto) {
     return this.usersService.getAllUsers(getAllUsersDto);
   }
-  @Get(':id') // only admin
-  @Roles(UserRole.ADMIN)
+  @Get(':id')
+  @UseGuards(AdminAccessOnlyGuard)
   public async findOneUserById(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.usersService.getOneUserById(id);
   }
   @Get('/email:email')
-  @Roles(UserRole.ADMIN)
+  @UseGuards(AdminAccessOnlyGuard)
   public async findOneUserByEmail(@Param('email') email: string) {
     return this.usersService.getOneUserByEmil(email);
   }
 
   @Post()
-  @Roles(UserRole.ADMIN) // this route only admin can use it
+  @UseGuards(AdminAccessOnlyGuard)
   public async createUser(@Body() createUserDto: CreateUserDto) {
     return this.usersService.createUser(createUserDto);
   }
   @Patch(':id')
-  @Roles(UserRole.ADMIN) // only admin or the user himself
+  @UseGuards(OwnerOrAdminGuard)
+  @OwnerCheck({
+    entity: Users,
+    param: 'id',
+    ownerField: 'id',
+  })
   public async patchUserById(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -54,7 +63,12 @@ export class UserController {
     return this.usersService.updateUserById(id, updateUserDto);
   }
   @Delete(':id')
-  @Roles(UserRole.ADMIN) // only admin or the user himself
+  @UseGuards(OwnerOrAdminGuard)
+  @OwnerCheck({
+    entity: Users,
+    param: 'id',
+    ownerField: 'id',
+  })
   @HttpCode(HttpStatus.NO_CONTENT)
   public async deleteUserById(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.usersService.deleteUserById(id);

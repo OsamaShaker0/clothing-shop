@@ -14,9 +14,8 @@ export class GetOneProductProvider {
   ) {}
 
   public async getOneProductById(id: string) {
-    console.log(id)
     try {
-      const product = await this.productRepository.findOneBy({id});
+      const product = await this.productRepository.findOneBy({ id });
       if (!product) {
         throw new NotFoundException(`product with id of ${id} is not found`);
       }

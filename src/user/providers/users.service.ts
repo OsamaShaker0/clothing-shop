@@ -14,8 +14,8 @@ export class UsersService {
     private readonly createUsersProvider: CreateUsersProvider,
     private readonly getUsersProvider: GetUsersProvider,
     private readonly getOneUserProvider: GetOneUserProvider,
-     private readonly updateUserProvider: UpdateUserProvider,
-        private readonly deleteUserProvider: DeleteUserProvider,
+    private readonly updateUserProvider: UpdateUserProvider,
+    private readonly deleteUserProvider: DeleteUserProvider,
   ) {}
   public getAllUsers(getAllUsersDto: GetAllUsersDto) {
     return this.getUsersProvider.getAllUsers(getAllUsersDto);
@@ -23,16 +23,16 @@ export class UsersService {
   public getOneUserById(id: string) {
     return this.getOneUserProvider.getOneUserById(id);
   }
-   public getOneUserByEmil(email: string) {
+  public getOneUserByEmil(email: string) {
     return this.getOneUserProvider.getOneUserByEmail(email);
   }
   public async createUser(createUserDto: CreateUserDto) {
     return this.createUsersProvider.createUser(createUserDto);
   }
-  public async updateUserById(id: string , updateUserDto : UpdateUserDto){
-    return this.updateUserProvider.updateUserById(id,updateUserDto)
+  public async updateUserById(id: string, updateUserDto: UpdateUserDto) {
+    return this.updateUserProvider.updateUserById(id, updateUserDto);
   }
-  public async deleteUserById(id : string){
-    return this.deleteUserProvider.deleteUserById(id)
+  public async deleteUserById(id: string) {
+    return this.deleteUserProvider.deleteUserById(id);
   }
 }
