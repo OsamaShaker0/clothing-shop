@@ -1,4 +1,5 @@
 import * as Joi from 'joi';
+import { join } from 'path';
 export default Joi.object({
   NODE_ENV: Joi.string()
     .valid('development', 'test', 'production', 'statging')
@@ -19,4 +20,5 @@ export default Joi.object({
   JWT_TOKEN_AUDIENCE: Joi.string().required(),
   JWT_TOKEN_ISSUER: Joi.string().required(),
   JWT_ACCESS_TOKEN_TTL: Joi.number().default(86400),
+  SHIPPING_PRICE: Joi.number().default(100),
 });

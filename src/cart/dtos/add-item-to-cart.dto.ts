@@ -5,6 +5,9 @@ export class AddItemToCartDto {
   @IsNotEmpty()
   @IsUUID()
   productId: string;
+  @IsNotEmpty()
+  @IsUUID()
+  productVariant: string;
   @IsOptional()
   @Type(() => Number)
   @Min(1)

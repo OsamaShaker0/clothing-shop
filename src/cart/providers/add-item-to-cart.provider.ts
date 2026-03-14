@@ -12,6 +12,7 @@ import { Repository } from 'typeorm';
 import { Cart } from '../cart.entity';
 import { AddItemToCartDto } from '../dtos/add-item-to-cart.dto';
 import { RequestWithActor } from '../interfaces/request-actor.inteface';
+import { ProductVariantService } from 'src/product/providers/product-variant.service';
 
 @Injectable()
 export class AddItemToCartProvider {
@@ -19,6 +20,8 @@ export class AddItemToCartProvider {
     private readonly createCartProvider: CreateCartProvider,
 
     private readonly productService: ProductService,
+
+    private readonly productVariantService: ProductVariantService,
 
     @InjectRepository(CartItem)
     private readonly cartItemRepository: Repository<CartItem>,
@@ -36,8 +39,17 @@ export class AddItemToCartProvider {
       const product = await this.productService.getOneProductById(
         addItemToCartDto.productId,
       );
+      const productVariant =
+        await this.productVariantService.findOneVariantForProduct({
+          productId: product.id,
+          variantId: addItemToCartDto.productVariant,
+        });
       let cartItem = await this.cartItemRepository.findOne({
-        where: { cart: { id: cart.id }, product: { id: product.id } },
+        where: {
+          cart: { id: cart.id },
+          product: { id: product.id },
+          productVariant: { id: productVariant.id },
+        },
       });
       if (cartItem) {
         cartItem.quantity =
@@ -48,6 +60,9 @@ export class AddItemToCartProvider {
           cartId: cart.id,
           product,
           productId: product.id,
+
+          productVariant: productVariant,
+          variantId: productVariant.id,
           price: product.price,
           quantity: addItemToCartDto.quantity ?? 1,
         });
@@ -56,7 +71,7 @@ export class AddItemToCartProvider {
 
       const updatedCart = await this.cartRepository.findOne({
         where: { id: cart.id },
-        relations: ['items', 'items.product'],
+        relations: ['items', 'items.product', 'items.productVariant'],
       });
 
       return updatedCart;

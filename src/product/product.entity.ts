@@ -7,9 +7,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { GenderEnum } from './enums/product-gender.enum';
 import { ProductTypeEnum } from './enums/product-type.enum';
+import { ProductVariant } from './productVariant.entity';
 
 @Entity()
 export class Product {
@@ -25,7 +27,7 @@ export class Product {
   price: number;
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   priceAfterDiscount: number;
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'json' })
   imagesUrl: string[];
   @Column({ default: true })
   isActive: boolean;
@@ -47,8 +49,11 @@ export class Product {
     enum: ProductTypeEnum,
   })
   productType: ProductTypeEnum;
-  @Column()
-  stock: number;
+
+  @OneToMany(() => ProductVariant, (variant) => variant.product, {
+    cascade: true,
+  })
+  variants: ProductVariant[];
   @CreateDateColumn()
   createdAt: Date;
 

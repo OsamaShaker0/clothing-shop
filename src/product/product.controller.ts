@@ -27,7 +27,7 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
   @Post()
   @UseGuards(AdminAccessOnlyGuard)
-  @UseInterceptors(FilesInterceptor('images', 10))
+  @UseInterceptors(FilesInterceptor('images', 5))
   public async createProduct(
     @Body() createProductDto: CreateProductDto,
     @UploadedFiles() files: Express.Multer.File[],

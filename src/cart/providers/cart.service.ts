@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AddItemToCartProvider } from './add-item-to-cart.provider';
 import { AddItemToCartDto } from '../dtos/add-item-to-cart.dto';
 
