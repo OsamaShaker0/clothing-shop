@@ -56,7 +56,7 @@ export class OrderCheckoutProvider {
         throw new NotFoundException('Cart not found or empty');
       }
 
-      let totalPrice = 0;
+      let orderPrice = 0;
 
       // create order
       let order = this.orderRepository.create({
@@ -69,7 +69,7 @@ export class OrderCheckoutProvider {
         status: OrderStatus.PENDING,
         payment: createOrderDto.payment ?? PaymentMethod.CASH,
         orderPrice: 0,
-        shippingPrice: this.Config.shippingPrice ?? 100, // set if you calculate shipping
+        shippingPrice: this.Config.shippingPrice ?? 100,
         totalPrice: 0,
       });
       //save order
@@ -79,6 +79,7 @@ export class OrderCheckoutProvider {
       for (const cartItem of cart.items) {
         const variant = await queryRunner.manager.findOne(ProductVariant, {
           where: { id: cartItem.variantId },
+          lock: { mode: 'pessimistic_write' },
         });
 
         if (!variant) throw new NotFoundException('Product variant not found');
@@ -101,14 +102,20 @@ export class OrderCheckoutProvider {
         await queryRunner.manager.save(orderItem);
 
         // update stock after create order
-        variant.stock -= cartItem.quantity;
-        await queryRunner.manager.save(variant);
+        await queryRunner.manager.decrement(
+          ProductVariant,
+          { id: variant.id },
+          'stock',
+          cartItem.quantity,
+        );
+        const itemTotal = variant.price * cartItem.quantity;
 
-        totalPrice += variant.price * cartItem.quantity;
+        orderPrice += itemTotal;
       }
 
       // add shiping price + order price and get total price then save the new order price
-      order.orderPrice = totalPrice + order.shippingPrice;
+      order.orderPrice = orderPrice;
+      order.totalPrice = orderPrice + order.shippingPrice;
 
       await queryRunner.manager.save(order);
 

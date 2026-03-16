@@ -13,9 +13,9 @@ import { PaymentMethod } from './enums/payment-method.enum';
 export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-  @Column({ type: 'varchar', length: 30 })
+  @Column({ type: 'varchar' })
   firstName: string;
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar' })
   lastName: string;
   @Column({ type: 'uuid', nullable: true })
   userId: string;
