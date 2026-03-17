@@ -8,7 +8,6 @@ import {
 } from 'typeorm';
 import { Order } from './orders.entity';
 import { ProductVariant } from 'src/product/productVariant.entity';
-import { PaymentMethod } from './enums/payment-method.enum';
 
 @Entity()
 export class OrderItem {

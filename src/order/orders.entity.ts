@@ -32,6 +32,8 @@ export class Order {
     nullable: true,
   })
   orderItems?: OrderItem[];
+  @Column({ type: 'boolean', default: false })
+  payedStatus?: boolean;
   @Column('uuid', { array: true, nullable: true })
   orderItemsIds?: string[];
   @Column('decimal', { precision: 10, scale: 2 })

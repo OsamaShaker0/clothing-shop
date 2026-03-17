@@ -7,6 +7,10 @@ import { OrderCheckoutProvider } from './providers/order-checkout.provider';
 import { ConfigModule } from '@nestjs/config';
 import { OrdersController } from './orders.controller';
 import { OneItemCheckoutProvider } from './providers/one-item-checkout.provider';
+import { ChangeOrderStatusProvider } from './providers/change-order-status.provider';
+import { ChangeOrderPayStatusProvider } from './providers/change-order-pay-status.provider';
+import { GetAllOrdersWithinDaysProvider } from './providers/get-all-orders-within-days.provider';
+import { GetSellsNumberWithinDaysProvider } from './providers/get-sells-number-within-days.provider';
 import appConfig from 'src/config/app.config';
 
 @Module({
@@ -14,7 +18,16 @@ import appConfig from 'src/config/app.config';
     TypeOrmModule.forFeature([Order, OrderItem]),
     ConfigModule.forFeature(appConfig),
   ],
-  providers: [OrderService, OrderCheckoutProvider, OneItemCheckoutProvider],
+  providers: [
+    OrderService,
+    OrderCheckoutProvider,
+    OneItemCheckoutProvider,
+    ChangeOrderStatusProvider,
+    ChangeOrderPayStatusProvider,
+    GetAllOrdersWithinDaysProvider,
+    GetSellsNumberWithinDaysProvider,
+  ],
   controllers: [OrdersController],
+  exports: [OrderService],
 })
 export class OrderModule {}

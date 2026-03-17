@@ -10,7 +10,6 @@ import { Repository } from 'typeorm';
 import { ProductService } from './product.service';
 import { CreateVariantDto } from '../dtos/create-variant.dto';
 import { CloudinaryService } from 'src/cloudinary/providers/cloudinary.service';
-import { FileEnumerator } from 'eslint/use-at-your-own-risk';
 
 @Injectable()
 export class CreateVariantForProductProvider {
@@ -48,6 +47,7 @@ export class CreateVariantForProductProvider {
       let variant = this.productVariantRepository.create({
         product,
         productId: product.id,
+        price:product.price,
         ...createVariantDto,
       });
       variant = await this.productVariantRepository.save(variant);

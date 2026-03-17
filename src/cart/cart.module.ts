@@ -38,5 +38,6 @@ import { FindCurrentUserCartProvider } from './providers/find-current-user-cart.
     FindCurrentUserCartProvider,
   ],
   controllers: [CartController],
+  exports: [CartService],
 })
 export class CartModule {}

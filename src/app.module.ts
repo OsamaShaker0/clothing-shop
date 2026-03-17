@@ -14,6 +14,7 @@ import cloudinaryConfig from './config/cloudinary.config';
 import jwtConfig from './config/jwt.config';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/guards/auth.guard';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 let ENV = process.env.NODE_ENV;
 
@@ -50,6 +51,7 @@ let ENV = process.env.NODE_ENV;
     CartModule,
     OrderModule,
     CloudinaryModule,
+    DashboardModule,
   ],
   controllers: [],
   providers: [{ provide: APP_GUARD, useClass: AuthGuard }],
