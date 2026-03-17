@@ -11,18 +11,20 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { CategoryService } from './providers/category.service';
 import { CreateCategoryDto } from './dtos/create-category.dto';
-import { FindCategoryDto } from './dtos/find-all-query.dto';
+
 import { EditCategoryDto } from './dtos/edit-category.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { AdminAccessOnlyGuard } from 'src/auth/guards/admin-access-only.guard';
+import { PaginationQueryDto } from 'src/utils/pagination/dto/pagination-query.dto';
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('category')
 export class CategoryController {
@@ -38,8 +40,11 @@ export class CategoryController {
   }
   @Get()
   @Public()
-  public async getAllCategories(@Query() findCategoryDto: FindCategoryDto) {
-    return this.categoryService.findAllCategories(findCategoryDto);
+  public async getAllCategories(
+    @Req() req: Request,
+    @Query() paginationQueryDto: PaginationQueryDto,
+  ) {
+    return this.categoryService.findAllCategories(req, paginationQueryDto);
   }
   @Get(':id')
   @Public()

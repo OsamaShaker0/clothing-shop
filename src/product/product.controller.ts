@@ -9,18 +9,19 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ProductService } from './providers/product.service';
 import { CreateProductDto } from './dtos/create-product.dto';
-import { FindAllProductsDto } from './dtos/find-all-products.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
 import { GetProductsByCategoryIdDto } from './dtos/get-products-by-category-id.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { AdminAccessOnlyGuard } from 'src/auth/guards/admin-access-only.guard';
+import { PaginationQueryDto } from 'src/utils/pagination/dto/pagination-query.dto';
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('products')
 export class ProductController {
@@ -37,9 +38,10 @@ export class ProductController {
   @Get()
   @Public()
   public async findAllProducts(
-    @Query() findAllProductsDto: FindAllProductsDto,
+    @Req() req: Request,
+    @Query() paginationQueryDto: PaginationQueryDto,
   ) {
-    return this.productService.getAllproducts(findAllProductsDto);
+    return this.productService.getAllproducts(req, paginationQueryDto);
   }
   @Get(':id')
   @Public()

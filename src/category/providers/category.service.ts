@@ -8,12 +8,17 @@ import { GetCategoriesProvider } from './get-categories.provider';
 import { GetOneCategoryProvider } from './get-one-category.provider';
 import { UpdateCategoryProvider } from './update-category.provider';
 import { DeleteCategoryProvider } from './delete-category.provider';
+import { queryWithPagination } from 'src/utils/pagination/query-builder';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationQueryDto } from 'src/utils/pagination/dto/pagination-query.dto';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CategoryService {
   constructor(
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
     private readonly createCategoryProvider: CreateCategoryProvider,
-    private readonly getCategoriesProvider: GetCategoriesProvider,
     private readonly getOneCategoryProvider: GetOneCategoryProvider,
     private readonly updateCategoryProvider: UpdateCategoryProvider,
     private readonly deleteCategoryProvider: DeleteCategoryProvider,
@@ -24,8 +29,8 @@ export class CategoryService {
   ) {
     return this.createCategoryProvider.createCategory(createCategoryDto, file);
   }
-  public async findAllCategories(findCategoryDto: FindCategoryDto) {
-    return this.getCategoriesProvider.findAllCategories(findCategoryDto);
+  public async findAllCategories(request, dto: PaginationQueryDto) {
+    return queryWithPagination(request, this.categoryRepository, dto);
   }
   public async findOneCategoryById(id: string): Promise<Category> {
     return await this.getOneCategoryProvider.findOneCategoryById(id);
