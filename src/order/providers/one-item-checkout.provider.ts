@@ -5,12 +5,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { RequestWithActor } from 'src/cart/interfaces/request-actor.inteface';
-import { DataSource, Repository } from 'typeorm';
-import { CreateOrderDto } from '../dtos/create-order.dto';
+import { DataSource } from 'typeorm';
 import { CreateOneItemOrderDto } from '../dtos/create-one-item-order.dto';
 import { ProductVariant } from 'src/product/productVariant.entity';
 import { Order } from '../orders.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { OrderItem } from '../order-item.entity';
 import appConfig from 'src/config/app.config';
 import type { ConfigType } from '@nestjs/config';
@@ -21,21 +19,15 @@ import { PaymentMethod } from '../enums/payment-method.enum';
 @Injectable()
 export class OneItemCheckoutProvider {
   constructor(
-    @InjectRepository(Order)
-    private readonly orderRepository: Repository<Order>,
-
-    @InjectRepository(OrderItem)
-    private readonly orderItemRepository: Repository<OrderItem>,
-
     private readonly dataSource: DataSource,
 
     @Inject(appConfig.KEY)
-    private readonly Config: ConfigType<typeof appConfig>,
+    private readonly config: ConfigType<typeof appConfig>,
   ) {}
 
   public async oneItemCheckout(
     request: RequestWithActor,
-    createOneTimeOrderDto: CreateOneItemOrderDto,
+    dto: CreateOneItemOrderDto,
   ) {
     const actorId = request.actor.sub;
     const actorType = request.actor.type;
@@ -44,69 +36,76 @@ export class OneItemCheckoutProvider {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      // find variant
+      // find variant with lock
       const variant = await queryRunner.manager.findOne(ProductVariant, {
-        where: { id: createOneTimeOrderDto.productVariantId },
+        where: { id: dto.productVariantId },
         lock: { mode: 'pessimistic_write' },
       });
-      // check for stock
-      if (!variant || variant.stock < createOneTimeOrderDto.quantity) {
-        throw new NotFoundException(
-          'Variant not found or not enough in stock ',
-        );
+
+      if (!variant) {
+        throw new NotFoundException('Variant not found');
       }
 
-      // create order
-      let order = this.orderRepository.create({
-        firstName: createOneTimeOrderDto.firstName,
-        lastName: createOneTimeOrderDto.lastName,
+      if (variant.stock < dto.quantity) {
+        throw new BadRequestException('Not enough stock');
+      }
+
+      //  calculate price
+      const unitPrice = variant.priceAfterDiscount ?? variant.price;
+      const orderPrice = unitPrice * dto.quantity;
+      const shippingPrice = this.config.shippingPrice ?? 100;
+      const totalPrice = orderPrice + shippingPrice;
+
+      //  create order
+      const order = queryRunner.manager.create(Order, {
+        firstName: dto.firstName,
+        lastName: dto.lastName,
         userId: actorType === ActorType.NORMAL_USER ? actorId : undefined,
         guestId: actorType === ActorType.GUEST ? actorId : undefined,
-        address: createOneTimeOrderDto.address,
-        phoneNumber: createOneTimeOrderDto.phoneNumber,
+        address: dto.address,
+        phoneNumber: dto.phoneNumber,
         status: OrderStatus.PENDING,
-        payment: createOneTimeOrderDto.payment ?? PaymentMethod.CASH,
-        orderPrice: 0,
-        shippingPrice: this.Config.shippingPrice ?? 100,
-        totalPrice: 0,
+        payment: dto.payment ?? PaymentMethod.CASH,
+        orderPrice,
+        shippingPrice,
+        totalPrice,
       });
+
       await queryRunner.manager.save(order);
-      // create order item
-      const orderItem = this.orderItemRepository.create({
+
+      //  create order item
+      const orderItem = queryRunner.manager.create(OrderItem, {
         order,
         productId: variant.productId,
-        variant: variant,
         variantId: variant.id,
+        variant,
         color: variant.color,
         size: variant.size,
-        quantity: createOneTimeOrderDto.quantity,
+        quantity: dto.quantity,
         price: variant.price,
+        priceAfterDiscount: variant.priceAfterDiscount ?? null,
       });
+
       await queryRunner.manager.save(orderItem);
-      order.orderPrice = orderItem.price * orderItem.quantity;
-      const totalPrice =
-        orderItem.price * orderItem.quantity + order.shippingPrice;
-      order.totalPrice = totalPrice;
-      console.log(totalPrice);
-      await queryRunner.manager.save(order);
-      // update stock
-      await queryRunner.manager.decrement(
-        ProductVariant,
-        { id: variant.id },
-        'stock',
-        orderItem.quantity,
-      );
+
+      // 5 update stock
+      variant.stock -= dto.quantity;
+      await queryRunner.manager.save(variant);
 
       await queryRunner.commitTransaction();
-      // make order
+
       return order;
     } catch (error) {
-      await queryRunner.rollbackTransaction();
       console.error(error);
+      await queryRunner.rollbackTransaction();
 
-      if (error instanceof NotFoundException) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
         throw error;
       }
+
       throw new BadRequestException('Checkout failed');
     } finally {
       await queryRunner.release();

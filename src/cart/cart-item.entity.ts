@@ -1,4 +1,11 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Cart } from './cart.entity';
 import { Product } from 'src/product/product.entity';
 import { ProductVariant } from 'src/product/productVariant.entity';
@@ -30,8 +37,10 @@ export class CartItem {
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  priceAfterDiscount: number;
   @CreateDateColumn()
-    createdAt: Date;
+  createdAt: Date;
   @UpdateDateColumn()
   updatedAt: Date;
 }

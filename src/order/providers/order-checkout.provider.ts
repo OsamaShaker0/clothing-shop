@@ -3,9 +3,10 @@ import {
   Inject,
   Injectable,
   NotFoundException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
+import { Repository, DataSource, In } from 'typeorm';
 import { Order } from '../orders.entity';
 import { OrderItem } from '../order-item.entity';
 import { Cart } from 'src/cart/cart.entity';
@@ -22,31 +23,23 @@ import type { ConfigType } from '@nestjs/config';
 @Injectable()
 export class OrderCheckoutProvider {
   constructor(
-    @InjectRepository(Order)
-    private readonly orderRepository: Repository<Order>,
-
-    @InjectRepository(OrderItem)
-    private readonly orderItemRepository: Repository<OrderItem>,
-
     private readonly dataSource: DataSource,
 
     @Inject(appConfig.KEY)
-    private readonly Config: ConfigType<typeof appConfig>,
+    private readonly config: ConfigType<typeof appConfig>,
   ) {}
 
-  public async checkout(
-    request: RequestWithActor,
-    createOrderDto: CreateOrderDto,
-  ) {
+  public async checkout(request: RequestWithActor, dto: CreateOrderDto) {
     const actorId = request.actor.sub;
     const actorType = request.actor.type;
 
     const queryRunner = this.dataSource.createQueryRunner();
+
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      // get cart useing actor id
+      //  get cart
       const cart = await queryRunner.manager.findOne(Cart, {
         where: [{ userId: actorId }, { guestId: actorId }],
         relations: ['items'],
@@ -56,84 +49,106 @@ export class OrderCheckoutProvider {
         throw new NotFoundException('Cart not found or empty');
       }
 
-      let orderPrice = 0;
+      //  collect Variant IDs
+      const variantIds = cart.items.map((item) => item.variantId);
 
-      // create order
-      let order = this.orderRepository.create({
-        firstName: createOrderDto.firstName,
-        lastName: createOrderDto.lastName,
+      //  get all variants with lock
+      const variants = await queryRunner.manager.find(ProductVariant, {
+        where: { id: In(variantIds) },
+        lock: { mode: 'pessimistic_write' },
+      });
+
+      const variantMap = new Map(
+        variants.map((variant) => [variant.id, variant]),
+      );
+
+      //  create order
+      const order = queryRunner.manager.create(Order, {
+        firstName: dto.firstName,
+        lastName: dto.lastName,
         userId: actorType === ActorType.NORMAL_USER ? actorId : undefined,
         guestId: actorType === ActorType.GUEST ? actorId : undefined,
-        address: createOrderDto.address,
-        phoneNumber: createOrderDto.phoneNumber,
+        address: dto.address,
+        phoneNumber: dto.phoneNumber,
         status: OrderStatus.PENDING,
-        payment: createOrderDto.payment ?? PaymentMethod.CASH,
+        payment: dto.payment ?? PaymentMethod.CASH,
         orderPrice: 0,
-        shippingPrice: this.Config.shippingPrice ?? 100,
+        shippingPrice: this.config.shippingPrice ?? 100,
         totalPrice: 0,
       });
-      //save order
+
       await queryRunner.manager.save(order);
 
-      // create order item using cart item and check for quentity with stock and variant existing
+      let orderPrice = 0;
+      const orderItems: OrderItem[] = [];
+
+      // Process cart items
       for (const cartItem of cart.items) {
-        const variant = await queryRunner.manager.findOne(ProductVariant, {
-          where: { id: cartItem.variantId },
-          lock: { mode: 'pessimistic_write' },
-        });
+        const variant = variantMap.get(cartItem.variantId);
 
-        if (!variant) throw new NotFoundException('Product variant not found');
-
-        if (variant.stock < cartItem.quantity) {
-          throw new BadRequestException('Out of stock');
+        if (!variant) {
+          throw new NotFoundException(
+            `Variant ${cartItem.variantId} not found`,
+          );
         }
 
-        const orderItem = this.orderItemRepository.create({
+        if (variant.stock < cartItem.quantity) {
+          throw new BadRequestException(
+            `Product ${variant.id} is out of stock`,
+          );
+        }
+
+        const price = variant.priceAfterDiscount ?? variant.price;
+
+        const orderItem = queryRunner.manager.create(OrderItem, {
           order,
           productId: variant.productId,
-          variant: variant,
           variantId: variant.id,
+          variant,
           color: variant.color,
           size: variant.size,
           quantity: cartItem.quantity,
           price: variant.price,
+          priceAfterDiscount: variant.priceAfterDiscount ?? null,
         });
 
-        await queryRunner.manager.save(orderItem);
+        orderItems.push(orderItem);
 
-        // update stock after create order
-        await queryRunner.manager.decrement(
-          ProductVariant,
-          { id: variant.id },
-          'stock',
-          cartItem.quantity,
-        );
-        const itemTotal = variant.price * cartItem.quantity;
+        orderPrice += price * cartItem.quantity;
 
-        orderPrice += itemTotal;
+        // update stock
+        variant.stock -= cartItem.quantity;
       }
 
-      // add shiping price + order price and get total price then save the new order price
+      // Save order items
+      await queryRunner.manager.save(OrderItem, orderItems);
+
+      // Save updated variants with new stock
+      await queryRunner.manager.save(ProductVariant, variants);
+
+      //  Update order totals
       order.orderPrice = orderPrice;
       order.totalPrice = orderPrice + order.shippingPrice;
 
       await queryRunner.manager.save(order);
 
-      // make cart empty
+      // 9Clear cart
       await queryRunner.manager.delete(CartItem, { cartId: cart.id });
 
       await queryRunner.commitTransaction();
 
       return order;
     } catch (error) {
-      await queryRunner.rollbackTransaction();
       console.error(error);
+      await queryRunner.rollbackTransaction();
+
       if (
         error instanceof NotFoundException ||
         error instanceof BadRequestException
       ) {
         throw error;
       }
+
       throw new BadRequestException('Checkout failed');
     } finally {
       await queryRunner.release();

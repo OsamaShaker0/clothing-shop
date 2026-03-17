@@ -15,6 +15,7 @@ import jwtConfig from './config/jwt.config';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 let ENV = process.env.NODE_ENV;
 
@@ -44,6 +45,12 @@ let ENV = process.env.NODE_ENV;
         synchronize: true,
       }),
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 100,
+      },
+    ]),
     AuthModule,
     UserModule,
     ProductModule,

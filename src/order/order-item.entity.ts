@@ -29,6 +29,8 @@ export class OrderItem {
   quantity: number;
   @Column('decimal', { precision: 10, scale: 2 })
   price: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  priceAfterDiscount: number;
   @ManyToOne(() => Order, (order) => order.orderItems)
   order: Order;
   @CreateDateColumn()
