@@ -76,4 +76,11 @@ export class CreateOneItemOrderDto {
   @IsOptional()
   @IsEnum(PaymentMethod)
   payment?: PaymentMethod;
+  @ApiPropertyOptional({
+    description: 'discount coupon code (optional)',
+    example: 'osama2026',
+  })
+  @IsOptional()
+  @IsString()
+  discountCoupon?: string;
 }

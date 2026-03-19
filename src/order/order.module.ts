@@ -12,11 +12,14 @@ import { ChangeOrderPayStatusProvider } from './providers/change-order-pay-statu
 import { GetAllOrdersWithinDaysProvider } from './providers/get-all-orders-within-days.provider';
 import { GetSellsNumberWithinDaysProvider } from './providers/get-sells-number-within-days.provider';
 import appConfig from 'src/config/app.config';
+import { Coupon } from 'src/coupons/coupon.entity';
+import { CouponsModule } from 'src/coupons/coupons.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Order, OrderItem]),
+    TypeOrmModule.forFeature([Order, OrderItem, Coupon]),
     ConfigModule.forFeature(appConfig),
+    CouponsModule,
   ],
   providers: [
     OrderService,

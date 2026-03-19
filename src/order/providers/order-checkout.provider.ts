@@ -3,10 +3,9 @@ import {
   Inject,
   Injectable,
   NotFoundException,
-  Logger,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource, In } from 'typeorm';
+
+import { DataSource, In } from 'typeorm';
 import { Order } from '../orders.entity';
 import { OrderItem } from '../order-item.entity';
 import { Cart } from 'src/cart/cart.entity';
@@ -19,12 +18,15 @@ import { PaymentMethod } from '../enums/payment-method.enum';
 import { ActorType } from 'src/cart/enums/actor-type.enum';
 import appConfig from 'src/config/app.config';
 import type { ConfigType } from '@nestjs/config';
+import { Coupon } from 'src/coupons/coupon.entity';
+import { CouponService } from 'src/coupons/providers/coupon.service';
 
 @Injectable()
 export class OrderCheckoutProvider {
   constructor(
     private readonly dataSource: DataSource,
 
+    private readonly couponService: CouponService,
     @Inject(appConfig.KEY)
     private readonly config: ConfigType<typeof appConfig>,
   ) {}
@@ -132,9 +134,23 @@ export class OrderCheckoutProvider {
       order.orderPrice = orderPrice;
       order.totalPrice = orderPrice + order.shippingPrice;
 
+      // apply coupon
+      if (dto.discountCoupon) {
+        const coupon = await queryRunner.manager.findOne(Coupon, {
+          where: { code: dto.discountCoupon, isActive: true },
+        });
+        if (!coupon)
+          throw new NotFoundException('Coupon not found or inactive');
+
+        await this.couponService.applyCoupon(
+          coupon,
+          order,
+          queryRunner.manager,
+        );
+      }
       await queryRunner.manager.save(order);
 
-      // 9Clear cart
+      // Clear cart
       await queryRunner.manager.delete(CartItem, { cartId: cart.id });
 
       await queryRunner.commitTransaction();

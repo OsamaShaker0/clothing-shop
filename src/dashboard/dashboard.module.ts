@@ -11,9 +11,11 @@ import { CartDashboardController } from './cart-dashboard.controller';
 import { OrderDashboardController } from './order-dashboard.controller';
 
 import { UsersDashboardController } from './users-dashboard.controller';
+import { CouponDashboardController } from './coupon-dashboard.controller';
+import { CouponsModule } from 'src/coupons/coupons.module';
 
 @Module({
-  imports: [UserModule, CategoryModule, ProductModule, CartModule, OrderModule],
+  imports: [UserModule, CategoryModule, ProductModule, CartModule, OrderModule , CouponsModule],
   controllers: [
     CategoryDashboardController,
     ProductDashboardController,
@@ -21,6 +23,7 @@ import { UsersDashboardController } from './users-dashboard.controller';
     CartDashboardController,
     OrderDashboardController,
     UsersDashboardController,
+    CouponDashboardController,
   ],
 })
 export class DashboardModule {}

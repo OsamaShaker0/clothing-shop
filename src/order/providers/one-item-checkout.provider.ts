@@ -15,11 +15,15 @@ import type { ConfigType } from '@nestjs/config';
 import { ActorType } from 'src/cart/enums/actor-type.enum';
 import { OrderStatus } from '../enums/order-status.enum';
 import { PaymentMethod } from '../enums/payment-method.enum';
+import { Coupon } from 'src/coupons/coupon.entity';
+import { CouponService } from 'src/coupons/providers/coupon.service';
 
 @Injectable()
 export class OneItemCheckoutProvider {
   constructor(
     private readonly dataSource: DataSource,
+
+    private readonly couponService: CouponService,
 
     @Inject(appConfig.KEY)
     private readonly config: ConfigType<typeof appConfig>,
@@ -70,7 +74,20 @@ export class OneItemCheckoutProvider {
         shippingPrice,
         totalPrice,
       });
+      // apply coupon
+      if (dto.discountCoupon) {
+        const coupon = await queryRunner.manager.findOne(Coupon, {
+          where: { code: dto.discountCoupon, isActive: true },
+        });
+        if (!coupon)
+          throw new NotFoundException('Coupon not found or inactive');
 
+        await this.couponService.applyCoupon(
+          coupon,
+          order,
+          queryRunner.manager,
+        );
+      }
       await queryRunner.manager.save(order);
 
       //  create order item
@@ -90,7 +107,7 @@ export class OneItemCheckoutProvider {
 
       //  update stock
       variant.stock -= dto.quantity;
-      variant.sellsVariantCount + variant.sellsVariantCount + dto.quantity;
+      variant.sellsVariantCount = variant.sellsVariantCount + dto.quantity;
       await queryRunner.manager.save(variant);
 
       await queryRunner.commitTransaction();
