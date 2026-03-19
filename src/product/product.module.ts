@@ -19,10 +19,17 @@ import { CreateVariantForProductProvider } from './providers/create-variant-for-
 import { ProductVariant } from './productVariant.entity';
 import { PatchVariantForProductProvider } from './providers/patch-variant-for-product.provider';
 import { DeleteVariantForProductProvider } from './providers/delete-variant-for-product.provider';
+import { DiscountProvider } from './providers/discount.provider';
+import { BestSellerProvider } from './providers/best-seller.provider';
+import { ConfigModule } from '@nestjs/config';
+import { NewArrivalsProvider } from './providers/new-arrivals.provider';
+import { OffersAndDiscountsProvider } from './providers/offers-and-discounts.provider';
+import appConfig from 'src/config/app.config';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Product, Category, ProductVariant]),
+    ConfigModule.forFeature(appConfig),
     CategoryModule,
   ],
   controllers: [ProductController, ProductsVariantController],
@@ -41,6 +48,10 @@ import { DeleteVariantForProductProvider } from './providers/delete-variant-for-
     CreateVariantForProductProvider,
     PatchVariantForProductProvider,
     DeleteVariantForProductProvider,
+    DiscountProvider,
+    BestSellerProvider,
+    NewArrivalsProvider,
+    OffersAndDiscountsProvider,
   ],
 })
 export class ProductModule {}

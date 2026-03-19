@@ -118,6 +118,8 @@ export class OrderCheckoutProvider {
 
         // update stock
         variant.stock -= cartItem.quantity;
+        variant.sellsVariantCount =
+          variant.sellsVariantCount + cartItem.quantity;
       }
 
       // Save order items

@@ -88,8 +88,9 @@ export class OneItemCheckoutProvider {
 
       await queryRunner.manager.save(orderItem);
 
-      // 5 update stock
+      //  update stock
       variant.stock -= dto.quantity;
+      variant.sellsVariantCount + variant.sellsVariantCount + dto.quantity;
       await queryRunner.manager.save(variant);
 
       await queryRunner.commitTransaction();

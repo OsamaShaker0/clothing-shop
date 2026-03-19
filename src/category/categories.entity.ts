@@ -20,16 +20,10 @@ export class Category {
   slug: string;
   @Column({ type: 'text', nullable: false })
   description: string;
-  @Column({ nullable: true })
+  @Column()
   imageUrl: string;
   @OneToMany(() => Product, (product) => product.category)
   products: Product[];
-  //   @ManyToOne(() => Category, (category) => category.children, {
-  //     nullable: true,
-  //   })
-  //   parent: Category;
-  //   @OneToMany(() => Category, (category) => category.parent)
-  //   children: Category[];
   @Column({ default: true })
   isActive: boolean;
   @CreateDateColumn()

@@ -33,6 +33,8 @@ export class ProductVariant {
   stock: number;
   @Column({ type: 'json', nullable: true })
   imagesUrl: string[];
+  @Column({ type: 'int', default: 0 })
+  sellsVariantCount: number;
   @CreateDateColumn()
   createdAt: Date;
   @UpdateDateColumn()

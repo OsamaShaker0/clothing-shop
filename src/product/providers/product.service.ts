@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductProvider } from './create-product.provider';
 import { CreateProductDto } from '../dtos/create-product.dto';
-import { GetProductsProvider } from './get-products.provider';
-import { FindAllProductsDto } from '../dtos/find-all-products.dto';
 import { GetOneProductProvider } from './get-one-product.provider';
 import { UpdateProductProvider } from './update-product.provider';
 import { UpdateProductDto } from '../dtos/update-product.dto';
@@ -14,6 +12,9 @@ import { Product } from '../product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { queryWithPagination } from 'src/utils/pagination/query-builder';
+import { DiscountProvider } from './discount.provider';
+import { NewArrivalsProvider } from './new-arrivals.provider';
+import { OffersAndDiscountsProvider } from './offers-and-discounts.provider';
 
 @Injectable()
 export class ProductService {
@@ -25,8 +26,16 @@ export class ProductService {
     private readonly updateProductProvider: UpdateProductProvider,
     private readonly deleteProductProvider: DeleteProductProvider,
     private readonly getProductsByCatgeoryIdProvider: GetProductsByCategoryIdProvider,
+    private readonly discountProvider: DiscountProvider,
+    private readonly newArrivalsProvider: NewArrivalsProvider,
+    private readonly getAllOffersProvider: OffersAndDiscountsProvider,
   ) {}
-
+  public async getNewArraivalsProducts() {
+    return this.newArrivalsProvider.newArrivals();
+  }
+  public async getAllOffers() {
+    return this.getAllOffersProvider.getAllOffers();
+  }
   public async createProduct(
     createProductDto: CreateProductDto,
     files: Express.Multer.File[],
@@ -59,6 +68,20 @@ export class ProductService {
     return this.getProductsByCatgeoryIdProvider.getProductsByCategory(
       categoryId,
       getProductsByCatgeoryIdDto,
+    );
+  }
+  public async addDiscountForProductAndVariants(
+    prosuctId: string,
+    discountPercentage: number,
+  ) {
+    return this.discountProvider.addDiscountForProductAndVariants(
+      prosuctId,
+      discountPercentage,
+    );
+  }
+  public async removeDiscountForProductAndVariants(prosuctId: string) {
+    return this.discountProvider.removeDiscountFromProductAndVariants(
+      prosuctId,
     );
   }
 }

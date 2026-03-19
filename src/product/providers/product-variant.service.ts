@@ -9,6 +9,7 @@ import { EditProductVariantDto } from '../dtos/edit-product-variant.dto';
 import { EditProductVariantBodyDto } from '../dtos/edit-product-variant-body.dto';
 import { DeleteProductVariantDto } from '../dtos/delete-product-variant.dto';
 import { DeleteVariantForProductProvider } from './delete-variant-for-product.provider';
+import { BestSellerProvider } from './best-seller.provider';
 
 @Injectable()
 export class ProductVariantService {
@@ -22,7 +23,13 @@ export class ProductVariantService {
     private readonly patchVariantForProductProvider: PatchVariantForProductProvider,
 
     private readonly deleteVariantForProductProvider: DeleteVariantForProductProvider,
+
+    private readonly bestSellerProvider: BestSellerProvider,
   ) {}
+
+  public async getBestSeller() {
+    return await this.bestSellerProvider.getBestSellerVariants();
+  }
 
   public async findAllProductVariant(productId: string) {
     return this.findAllProductVariantsProvider.findAllProductVariant(productId);

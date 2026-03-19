@@ -15,7 +15,11 @@ export async function queryWithPagination<T extends ObjectLiteral>(
   const qb = repository.createQueryBuilder('entity');
 
   // filters
-  if (dto.color) qb.andWhere('entity.color = :color', { color: dto.color });
+  if (dto.name) {
+  
+  qb.andWhere('entity.name ILIKE :name', { name: `%${dto.name}%` })};
+
+
   if (dto.gender)
     qb.andWhere('entity.gender = :gender', { gender: dto.gender });
   if (dto.minPrice !== undefined)

@@ -21,14 +21,40 @@ import { EditProductVariantDto } from './dtos/edit-product-variant.dto';
 import { EditProductVariantBodyDto } from './dtos/edit-product-variant-body.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { DeleteProductVariantDto } from './dtos/delete-product-variant.dto';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { ProductVariant } from './productVariant.entity';
 
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiTags('Product Variants')
 @Controller('products')
 export class ProductsVariantController {
   constructor(private readonly productVariantService: ProductVariantService) {}
-
+  @Get('variants/best-seller')
+  @Public()
+  @ApiOperation({ summary: 'Get top best-selling variants' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of best-selling product variants',
+    type: [ProductVariant],
+  })
+  public async bestSeller() {
+    return this.productVariantService.getBestSeller();
+  }
   @Get(':productId/variants')
   @Public()
+  @ApiOperation({ summary: 'Get all variants for a product' })
+  @ApiParam({
+    name: 'productId',
+    description: 'Product ID',
+    example: '550e8400-e29b-41d4-a716-446655440000',
+  })
+  @ApiResponse({ status: 200, description: 'List of variants for the product' })
   public async findAllVariantForProduct(
     @Param('productId', new ParseUUIDPipe()) productId: string,
   ) {
@@ -36,6 +62,18 @@ export class ProductsVariantController {
   }
   @Get(':productId/variants/:variantId')
   @Public()
+  @ApiOperation({ summary: 'Get a single variant by ID for a product' })
+  @ApiParam({
+    name: 'productId',
+    description: 'Product ID',
+    example: '550e8400-e29b-41d4-a716-446655440000',
+  })
+  @ApiParam({
+    name: 'variantId',
+    description: 'Variant ID',
+    example: '660e8400-e29b-41d4-a716-446655440111',
+  })
+  @ApiResponse({ status: 200, description: 'Variant found' })
   public async findOneVariantForProductById(
     @Param() findOneVariantForProductDto: FindOneVariantForProductDto,
   ) {
@@ -46,6 +84,13 @@ export class ProductsVariantController {
   @Post(':productId/variants')
   @UseGuards(AdminAccessOnlyGuard)
   @UseInterceptors(FilesInterceptor('images', 6))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a new variant for a product' })
+  @ApiParam({
+    name: 'productId',
+    description: 'Product ID',
+    example: '550e8400-e29b-41d4-a716-446655440000',
+  })
   public async createVariantForProduct(
     @Param('productId', new ParseUUIDPipe()) productId: string,
     @Body() createVariantDto: CreateVariantDto,
@@ -59,6 +104,18 @@ export class ProductsVariantController {
   }
   @Patch('/:productId/variants/:variantId')
   @UseGuards(AdminAccessOnlyGuard)
+  @ApiBearerAuth()
+  @ApiParam({
+    name: 'productId',
+    description: 'Product ID',
+    example: '550e8400-e29b-41d4-a716-446655440000',
+  })
+  @ApiParam({
+    name: 'variantId',
+    description: 'Variant ID',
+    example: '660e8400-e29b-41d4-a716-446655440111',
+  })
+  @ApiOperation({ summary: 'Edit a product variant by ID' })
   public async editProductVariantById(
     @Param() editProductVariantDto: EditProductVariantDto,
     @Body() editProductVariantBodyDto: EditProductVariantBodyDto,
@@ -70,6 +127,18 @@ export class ProductsVariantController {
   }
   @Patch(':productId/variants/:variantId/photos')
   @UseGuards(AdminAccessOnlyGuard)
+  @ApiBearerAuth()
+  @ApiParam({
+    name: 'productId',
+    description: 'Product ID',
+    example: '550e8400-e29b-41d4-a716-446655440000',
+  })
+  @ApiParam({
+    name: 'variantId',
+    description: 'Variant ID',
+    example: '660e8400-e29b-41d4-a716-446655440111',
+  })
+  @ApiOperation({ summary: 'Update product variant photos' })
   @UseInterceptors(FilesInterceptor('images', 6))
   updateVariantPhotos(
     @Param() editProductVariantDto: EditProductVariantDto,
@@ -82,10 +151,22 @@ export class ProductsVariantController {
   }
   @Delete('/:productId/variants/:variantId')
   @UseGuards(AdminAccessOnlyGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete a product variant by ID' })
+  @ApiParam({
+    name: 'productId',
+    description: 'Product ID',
+    example: '550e8400-e29b-41d4-a716-446655440000',
+  })
+  @ApiParam({
+    name: 'variantId',
+    description: 'Variant ID',
+    example: '660e8400-e29b-41d4-a716-446655440111',
+  })
+  @ApiResponse({ status: 200, description: 'Variant deleted successfully' })
   public async deleteProductVariantById(
     @Param() deleteProductVariantDto: DeleteProductVariantDto,
   ) {
     return this.productVariantService.deleteVariant(deleteProductVariantDto);
   }
 }
-

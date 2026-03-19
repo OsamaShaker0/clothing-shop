@@ -47,7 +47,8 @@ export class CreateVariantForProductProvider {
       let variant = this.productVariantRepository.create({
         product,
         productId: product.id,
-        price:product.price,
+        price: product.price,
+        priceAfterDiscount: product.priceAfterDiscount,
         ...createVariantDto,
       });
       variant = await this.productVariantRepository.save(variant);
