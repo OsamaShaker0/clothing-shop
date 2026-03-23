@@ -19,7 +19,7 @@ import { AuthModule } from 'src/auth/auth.module';
     UpdateUserProvider,
     DeleteUserProvider,
   ],
-  imports: [TypeOrmModule.forFeature([Users]), forwardRef(() => AuthModule)],
+  imports: [TypeOrmModule.forFeature([Users]), forwardRef(() => AuthModule) ],
   controllers: [UserController],
   exports: [UsersService],
 })

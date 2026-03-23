@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { CreateCartProvider } from './providers/create-cart.provider';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Cart } from './cart.entity';
@@ -22,7 +22,7 @@ import { FindCurrentUserCartProvider } from './providers/find-current-user-cart.
   imports: [
     TypeOrmModule.forFeature([Cart, CartItem]),
     UserModule,
-    ProductModule,
+    forwardRef(() => ProductModule),
     AuthModule,
   ],
   providers: [

@@ -10,14 +10,15 @@ import { Repository } from 'typeorm';
 import { ProductService } from './product.service';
 import { CreateVariantDto } from '../dtos/create-variant.dto';
 import { CloudinaryService } from 'src/cloudinary/providers/cloudinary.service';
+import { GetOneProductProvider } from './get-one-product.provider';
 
 @Injectable()
 export class CreateVariantForProductProvider {
   constructor(
     @InjectRepository(ProductVariant)
     private readonly productVariantRepository: Repository<ProductVariant>,
-
-    private readonly productService: ProductService,
+    
+    private readonly getOneProductProvider: GetOneProductProvider,
 
     private readonly cloudinaryService: CloudinaryService,
   ) {}
@@ -30,7 +31,8 @@ export class CreateVariantForProductProvider {
       await this.cloudinaryService.uploadMultipleImages(files);
     createVariantDto.imagesUrl = uploadedImages.map((img) => img.imageUrl);
     try {
-      const product = await this.productService.getOneProductById(productId);
+      const product =
+        await this.getOneProductProvider.getOneProductById(productId);
 
       const exists = await this.productVariantRepository.findOne({
         where: {

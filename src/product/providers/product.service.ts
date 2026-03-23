@@ -15,7 +15,9 @@ import { queryWithPagination } from 'src/utils/pagination/query-builder';
 import { DiscountProvider } from './discount.provider';
 import { NewArrivalsProvider } from './new-arrivals.provider';
 import { OffersAndDiscountsProvider } from './offers-and-discounts.provider';
-
+import { ProductsSpinnerProvider } from './products-spinner.provider';
+import { ForYouProvider } from './for-you.provider';
+import { RequestWithActor } from 'src/cart/interfaces/request-actor.inteface';
 @Injectable()
 export class ProductService {
   constructor(
@@ -29,7 +31,15 @@ export class ProductService {
     private readonly discountProvider: DiscountProvider,
     private readonly newArrivalsProvider: NewArrivalsProvider,
     private readonly getAllOffersProvider: OffersAndDiscountsProvider,
+    private readonly productsSpinnerProvider: ProductsSpinnerProvider,
+    private readonly forYouProvider: ForYouProvider,
   ) {}
+  public async getOneProductByLuck() {
+    return this.productsSpinnerProvider.getProductByLuck();
+  }
+  public async getProductsForYou(request: RequestWithActor) {
+    return this.forYouProvider.forYouProduct(request);
+  }
   public async getNewArraivalsProducts() {
     return this.newArrivalsProvider.newArrivals();
   }

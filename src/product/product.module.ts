@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './product.entity';
 import { Category } from 'src/category/categories.entity';
@@ -24,19 +24,26 @@ import { BestSellerProvider } from './providers/best-seller.provider';
 import { ConfigModule } from '@nestjs/config';
 import { NewArrivalsProvider } from './providers/new-arrivals.provider';
 import { OffersAndDiscountsProvider } from './providers/offers-and-discounts.provider';
+import { ProductsSpinnerProvider } from './providers/products-spinner.provider';
+import { ForYouProvider } from './providers/for-you.provider';
 import appConfig from 'src/config/app.config';
+import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
+import { CartModule } from 'src/cart/cart.module';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Product, Category, ProductVariant]),
     ConfigModule.forFeature(appConfig),
     CategoryModule,
+    forwardRef(() => CartModule),
+    UserModule,
   ],
   controllers: [ProductController, ProductsVariantController],
-  exports: [ProductService, ProductVariantService],
+  exports: [ProductService, ProductVariantService, GetOneProductProvider],
   providers: [
-    CreateProductProvider,
     ProductService,
+    CreateProductProvider,
     GetProductsProvider,
     GetOneProductProvider,
     UpdateProductProvider,
@@ -52,6 +59,8 @@ import appConfig from 'src/config/app.config';
     BestSellerProvider,
     NewArrivalsProvider,
     OffersAndDiscountsProvider,
+    ProductsSpinnerProvider,
+    ForYouProvider,
   ],
 })
 export class ProductModule {}

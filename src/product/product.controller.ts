@@ -33,6 +33,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Product } from './product.entity';
+import type { RequestWithActor } from 'src/cart/interfaces/request-actor.inteface';
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('Products')
 @Controller('products')
@@ -74,6 +75,33 @@ export class ProductController {
     @Query() paginationQueryDto: PaginationQueryDto,
   ) {
     return this.productService.getAllproducts(req, paginationQueryDto);
+  }
+
+  @Get('spinner')
+  @Public()
+  @ApiOperation({ summary: 'Get a random product (spinner)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Random product retrieved successfully',
+    type: Product,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No products found',
+  })
+  public async getProductByLuck() {
+    return this.productService.getOneProductByLuck();
+  }
+  @Get('for-you')
+  @Public()
+  @ApiOperation({ summary: 'Get personalized product recommendations' })
+  @ApiResponse({
+    status: 200,
+    description: 'Recommended products retrieved successfully',
+    type: [Product],
+  })
+  public async getProductsForYou(@Req() request: RequestWithActor) {
+    return this.productService.getProductsForYou(request);
   }
   @Get('new-arrivals')
   @Public()

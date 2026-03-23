@@ -13,14 +13,15 @@ import { Cart } from '../cart.entity';
 import { AddItemToCartDto } from '../dtos/add-item-to-cart.dto';
 import { RequestWithActor } from '../interfaces/request-actor.inteface';
 import { ProductVariantService } from 'src/product/providers/product-variant.service';
+import { GetOneProductProvider } from 'src/product/providers/get-one-product.provider';
 
 @Injectable()
 export class AddItemToCartProvider {
   constructor(
     private readonly createCartProvider: CreateCartProvider,
 
-    private readonly productService: ProductService,
-
+    private readonly getOneProductProvider: GetOneProductProvider,
+    
     private readonly productVariantService: ProductVariantService,
 
     @InjectRepository(CartItem)
@@ -36,7 +37,7 @@ export class AddItemToCartProvider {
   ) {
     let cart: Cart = await this.createCartProvider.createCart(request);
     try {
-      const product = await this.productService.getOneProductById(
+      const product = await this.getOneProductProvider.getOneProductById(
         addItemToCartDto.productId,
       );
       const productVariant =
