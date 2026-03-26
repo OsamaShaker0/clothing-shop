@@ -25,7 +25,7 @@ export class ProductVariant {
   color: string;
   @Column({ type: 'enum', enum: ProductVariantSize })
   size: ProductVariantSize;
-  @Column('int')
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   priceAfterDiscount: number;

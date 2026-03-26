@@ -23,6 +23,8 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { DeleteProductVariantDto } from './dtos/delete-product-variant.dto';
 import {
   ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
   ApiOperation,
   ApiParam,
   ApiResponse,
@@ -85,11 +87,29 @@ export class ProductsVariantController {
   @UseGuards(AdminAccessOnlyGuard)
   @UseInterceptors(FilesInterceptor('images', 6))
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Create a new variant for a product' })
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({
+    summary: 'Create a new variant for a product (upload files to Cloudinary)',
+  })
   @ApiParam({
     name: 'productId',
     description: 'Product ID',
     example: '550e8400-e29b-41d4-a716-446655440000',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['images', 'color', 'size', 'stock'],
+      properties: {
+        size: { type: 'string', example: 'M' },
+        color: { type: 'string', example: 'red' },
+        stock: { type: 'number', example: 10 },
+        images: {
+          type: 'array',
+          items: { type: 'string', format: 'binary' }, // file picker in Swagger
+        },
+      },
+    },
   })
   public async createVariantForProduct(
     @Param('productId', new ParseUUIDPipe()) productId: string,
@@ -128,6 +148,7 @@ export class ProductsVariantController {
   @Patch(':productId/variants/:variantId/photos')
   @UseGuards(AdminAccessOnlyGuard)
   @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
   @ApiParam({
     name: 'productId',
     description: 'Product ID',
@@ -139,6 +160,18 @@ export class ProductsVariantController {
     example: '660e8400-e29b-41d4-a716-446655440111',
   })
   @ApiOperation({ summary: 'Update product variant photos' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['images'],
+      properties: {
+        images: {
+          type: 'array',
+          items: { type: 'string', format: 'binary' },
+        },
+      },
+    },
+  })
   @UseInterceptors(FilesInterceptor('images', 6))
   updateVariantPhotos(
     @Param() editProductVariantDto: EditProductVariantDto,

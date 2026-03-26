@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -40,19 +41,13 @@ export class CreateCategoryDto {
   @MinLength(4)
   @MaxLength(512)
   description: string;
-  @ApiProperty({
-    description: 'Image URL of the category ',
-    example: 'https://example.com/category-image.jpg',
-  })
-  @IsUrl()
-  @IsNotEmpty()
-  imageUrl: string;
 
   @ApiPropertyOptional({
     description: 'Whether the category is active (optional)',
     example: true,
   })
   @IsBoolean()
+  @Type(() => Boolean)
   @IsOptional()
   isActive?: boolean;
 }

@@ -1,6 +1,6 @@
 import { ObjectLiteral, Repository } from 'typeorm';
 import { PaginationQueryDto } from './dto/pagination-query.dto';
-import { Request } from 'express'; // import express Request
+import { Request } from 'express'; 
 
 export async function queryWithPagination<T extends ObjectLiteral>(
   req: Request,

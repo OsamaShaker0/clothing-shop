@@ -28,7 +28,7 @@ export class CreateProductProvider {
     const uploadedImages =
       await this.cloudinaryService.uploadMultipleImages(files);
 
-    createProductDto.imagesUrl = uploadedImages.map((img) => img.imageUrl);
+    let imagesUrl = uploadedImages.map((img) => img.imageUrl);
     try {
       const { categoryId, ...productData } = createProductDto;
 
@@ -44,6 +44,7 @@ export class CreateProductProvider {
 
       const product = this.productRepository.create({
         ...productData,
+        imagesUrl,
         category,
       });
 

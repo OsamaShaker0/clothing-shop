@@ -7,6 +7,7 @@ import {
   IsString,
   IsUUID,
   MaxLength,
+  Min,
   MinLength,
   ValidateNested,
 } from 'class-validator';
@@ -52,6 +53,7 @@ export class CreateOneItemOrderDto {
     example: 2,
   })
   @IsInt()
+  @Min(1)
   @Type(() => Number)
   quantity: number = 1;
   @ApiProperty({

@@ -10,7 +10,7 @@ export default Joi.object({
   DATABASE_USERNAME: Joi.string().required(),
   DATABASE_PASSWORD: Joi.string().required(),
   DATABASE_AUTO_LOAD_ENTITIES: Joi.boolean().required().default(true),
-  DATABASE_SYNCHRONIZE: Joi.boolean().required().default(false),
+  DATABASE_SYNCHRONIZE: Joi.boolean().default(false),
   CLOUDINARY_CLOUD_NAME: Joi.string().required(),
   CLOUDINARY_API_KEY: Joi.string().required(),
   CLOUDINARY_API_SECRET: Joi.string().required(),

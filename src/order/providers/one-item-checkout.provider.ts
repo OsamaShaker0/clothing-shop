@@ -67,6 +67,7 @@ export class OneItemCheckoutProvider {
         userId: actorType === ActorType.NORMAL_USER ? actorId : undefined,
         guestId: actorType === ActorType.GUEST ? actorId : undefined,
         address: dto.address,
+        orderItemsIds: [variant.id],
         phoneNumber: dto.phoneNumber,
         status: OrderStatus.PENDING,
         payment: dto.payment ?? PaymentMethod.CASH,

@@ -43,7 +43,7 @@ export class UserController {
   @UseGuards(AdminAccessOnlyGuard)
   @ApiOperation({ summary: 'Get all users (admin only)' })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
-  @ApiQuery({ name: 'offset', required: false, example: 0 })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiResponse({ status: 200, description: 'List of users', type: [Users] })
   public async findAllUsers(@Query() getAllUsersDto: GetAllUsersDto) {
     return this.usersService.getAllUsers(getAllUsersDto);
@@ -61,7 +61,7 @@ export class UserController {
   public async findOneUserById(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.usersService.getOneUserById(id);
   }
-  @Get('/email:email')
+  @Get('/email/:email')
   @UseGuards(AdminAccessOnlyGuard)
   @ApiOperation({ summary: 'Get a user by email (admin only)' })
   @ApiParam({
@@ -72,7 +72,7 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'The user', type: Users })
   @ApiResponse({ status: 404, description: 'User not found' })
   public async findOneUserByEmail(@Param('email') email: string) {
-    return this.usersService.getOneUserByEmil(email);
+    return this.usersService.getOneUserByEmail(email);
   }
 
   @Post()

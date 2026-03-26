@@ -17,7 +17,7 @@ export class CreateVariantForProductProvider {
   constructor(
     @InjectRepository(ProductVariant)
     private readonly productVariantRepository: Repository<ProductVariant>,
-    
+
     private readonly getOneProductProvider: GetOneProductProvider,
 
     private readonly cloudinaryService: CloudinaryService,
@@ -29,7 +29,7 @@ export class CreateVariantForProductProvider {
   ) {
     const uploadedImages =
       await this.cloudinaryService.uploadMultipleImages(files);
-    createVariantDto.imagesUrl = uploadedImages.map((img) => img.imageUrl);
+    const imagesUrl = uploadedImages.map((img) => img.imageUrl);
     try {
       const product =
         await this.getOneProductProvider.getOneProductById(productId);
@@ -51,6 +51,7 @@ export class CreateVariantForProductProvider {
         productId: product.id,
         price: product.price,
         priceAfterDiscount: product.priceAfterDiscount,
+        imagesUrl,
         ...createVariantDto,
       });
       variant = await this.productVariantRepository.save(variant);

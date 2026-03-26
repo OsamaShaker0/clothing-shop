@@ -27,6 +27,7 @@ import { AdminAccessOnlyGuard } from 'src/auth/guards/admin-access-only.guard';
 import { PaginationQueryDto } from 'src/utils/pagination/dto/pagination-query.dto';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiConsumes,
   ApiOperation,
   ApiParam,
@@ -44,6 +45,18 @@ export class CategoryController {
   @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Create a new category (Admin only)' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['image', 'name', 'slug', 'description'],
+      properties: {
+        name: { type: 'string', example: 'Summer Collection' },
+        slug: { type: 'string', example: 'summer-collection' },
+        description: { type: 'string', example: 'Category description' },
+        image: { type: 'string', format: 'binary' }, // must match interceptor
+      },
+    },
+  })
   @ApiResponse({ status: 201, description: 'Category created successfully' })
   @UseInterceptors(FileInterceptor('image', { storage: memoryStorage() }))
   public async createCategory(
@@ -55,7 +68,18 @@ export class CategoryController {
   @Get()
   @Public()
   @ApiOperation({ summary: 'Get all categories (Public)' })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiQuery({ name: 'sortBy', required: false, example: 'createdAt' })
+  @ApiQuery({
+    name: 'order',
+    required: false,
+    enum: ['ASC', 'DESC'],
+    example: 'ASC',
+  })
   @ApiQuery({ name: 'name', required: false, example: 'first one' })
+  @ApiQuery({ name: 'slug', required: false, example: 'first-one' })
+  @ApiResponse({ status: 200, description: 'List of products with pagination' })
   @ApiResponse({ status: 200, description: 'List of categories' })
   public async getAllCategories(
     @Req() req: Request,

@@ -71,6 +71,7 @@ export class OrderCheckoutProvider {
         userId: actorType === ActorType.NORMAL_USER ? actorId : undefined,
         guestId: actorType === ActorType.GUEST ? actorId : undefined,
         address: dto.address,
+        orderItemsIds: [],
         phoneNumber: dto.phoneNumber,
         status: OrderStatus.PENDING,
         payment: dto.payment ?? PaymentMethod.CASH,
@@ -96,7 +97,7 @@ export class OrderCheckoutProvider {
 
         if (variant.stock < cartItem.quantity) {
           throw new BadRequestException(
-            `Product ${variant.id} is out of stock`,
+            `Product ${variant.id} is out of stock , have only ${variant.stock}`,
           );
         }
 
@@ -148,6 +149,10 @@ export class OrderCheckoutProvider {
           queryRunner.manager,
         );
       }
+
+      cart.items.forEach((item) => {
+        order.orderItemsIds.push(String(item.variantId));
+      });
       await queryRunner.manager.save(order);
 
       // Clear cart

@@ -18,19 +18,33 @@ export class BestSellerProvider {
     @Inject(appConfig.KEY)
     private readonly config: ConfigType<typeof appConfig>,
   ) {}
-
   public async getBestSellerVariants() {
     try {
       const bestSellerVariants = await this.ProductVariantRepository.find({
+        select: [
+          'id',
+          'price',
+          'sellsVariantCount',
+          'stock',
+          'imagesUrl',
+          'priceAfterDiscount',
+        ],
         where: { stock: MoreThan(1) },
         order: { sellsVariantCount: 'DESC' },
         take: this.config.bestSellerNumber,
       });
-      return bestSellerVariants;
+
+      return bestSellerVariants.map((variant) => ({
+        id: variant.id,
+        Images: variant.imagesUrl,
+        price: variant.price,
+        priceAterDiscount: variant.priceAfterDiscount,
+        sellsCount: variant.sellsVariantCount,
+      }));
     } catch (error) {
-      console.error(error);
+      console.error('BestSellerProvider.getBestSellerVariants error:', error);
       throw new InternalServerErrorException(
-        'Something went wrong , please try again',
+        'Something went wrong, please try again',
       );
     }
   }

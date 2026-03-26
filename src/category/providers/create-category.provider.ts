@@ -22,9 +22,12 @@ export class CreateCategoryProvider {
     file: Express.Multer.File,
   ) {
     const uploadedImage = await this.cloudinaryService.uploadImage(file);
-    createCategoryDto.imageUrl = uploadedImage.imageUrl;
+    const imageUrl = uploadedImage.imageUrl;
     try {
-      let category = this.categoryRepository.create(createCategoryDto);
+      let category = this.categoryRepository.create({
+        ...createCategoryDto,
+        imageUrl,
+      });
       category = await this.categoryRepository.save(category);
       return category;
     } catch (error) {

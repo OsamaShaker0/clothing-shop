@@ -23,7 +23,7 @@ export class UsersService {
   public getOneUserById(id: string) {
     return this.getOneUserProvider.getOneUserById(id);
   }
-  public getOneUserByEmil(email: string) {
+  public getOneUserByEmail(email: string) {
     return this.getOneUserProvider.getOneUserByEmail(email);
   }
   public async createUser(createUserDto: CreateUserDto) {

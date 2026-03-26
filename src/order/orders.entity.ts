@@ -9,7 +9,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { PaymentMethod } from './enums/payment-method.enum';
-import { Coupon } from 'src/coupons/coupon.entity';
 @Entity()
 export class Order {
   @PrimaryGeneratedColumn('uuid')
@@ -35,8 +34,8 @@ export class Order {
   orderItems?: OrderItem[];
   @Column({ type: 'boolean', default: false })
   payedStatus?: boolean;
-  @Column('uuid', { array: true, nullable: true })
-  orderItemsIds?: string[];
+  @Column('uuid', { array: true })
+  orderItemsIds: string[];
   @Column('decimal', { precision: 10, scale: 2 })
   orderPrice: number;
   @Column({ type: 'enum', enum: PaymentMethod, default: PaymentMethod.CASH })

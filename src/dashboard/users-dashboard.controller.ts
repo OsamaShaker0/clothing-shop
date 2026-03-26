@@ -18,6 +18,7 @@ import {
   ApiBearerAuth,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -36,6 +37,8 @@ export class UsersDashboardController {
   constructor(private readonly usersService: UsersService) {}
   @Get()
   @ApiOperation({ summary: 'Get all users (with filters & pagination)' })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
   public async findAllUsers(@Query() getAllUsersDto: GetAllUsersDto) {
     return this.usersService.getAllUsers(getAllUsersDto);
@@ -56,7 +59,7 @@ export class UsersDashboardController {
   @ApiParam({ name: 'email', type: 'string', example: 'user@email.com' })
   @ApiResponse({ status: 200, description: 'User retrieved successfully' })
   public async findOneUserByEmail(@Param('email') email: string) {
-    return this.usersService.getOneUserByEmil(email);
+    return this.usersService.getOneUserByEmail(email);
   }
 
   @Post()

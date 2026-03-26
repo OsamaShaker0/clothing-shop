@@ -45,7 +45,39 @@ export class ProductController {
   @ApiOperation({ summary: 'Create a product (admin only)' })
   @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: CreateProductDto })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: [
+        'name',
+        'slug',
+        'description',
+        'price',
+        'productType',
+        'gender',
+        'categoryId',
+        'images', // 👈 required
+      ],
+      properties: {
+        name: { type: 'string', example: 'Summer Shirt' },
+        slug: { type: 'string', example: 'summer-shirt' },
+        description: { type: 'string' },
+        price: { type: 'number', example: 60 },
+        priceAfterDiscount: { type: 'number', example: 50 },
+        productType: { type: 'string', example: 'shirt' },
+        gender: { type: 'string', example: 'male' },
+        categoryId: { type: 'string', format: 'uuid' },
+        isActive: { type: 'boolean', example: true },
+        images: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+      },
+    },
+  })
   @ApiResponse({ status: 201, description: 'Product created successfully' })
   public async createProduct(
     @Body() createProductDto: CreateProductDto,

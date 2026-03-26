@@ -48,8 +48,6 @@ export class OwnerOrAdminGuard implements CanActivate {
         record[ownerField[1]] === actor.sub
       ) {
         return true;
-      } else {
-        throw new ForbiddenException('Not Allowed');
       }
     } else if (record[ownerField as string] !== actor.sub) {
       throw new ForbiddenException('Not Allowed');

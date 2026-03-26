@@ -50,21 +50,10 @@ export class CreateProductDto {
 
   @IsNumber()
   @Min(0)
+  @Type(() => Number)
   @IsOptional()
   priceAfterDiscount?: number;
-  @ApiPropertyOptional({
-    description: 'Price after discount (optional)',
-    minimum: 0,
-    example: 39.99,
-  })
-  @IsOptional()
-  @IsUrl()
-  @ApiPropertyOptional({
-    description: 'Array of product image URLs (optional)',
-    type: [String],
-    example: ['https://example.com/img1.jpg', 'https://example.com/img2.jpg'],
-  })
-  imagesUrl?: string[];
+
   @ApiProperty({
     description: 'Product type',
     enum: ProductTypeEnum,
@@ -81,6 +70,7 @@ export class CreateProductDto {
     example: true,
   })
   @IsBoolean()
+  @Type(() => Boolean)
   @IsOptional()
   isActive?: boolean;
   @ApiProperty({
@@ -98,13 +88,4 @@ export class CreateProductDto {
   @IsNotEmpty()
   @IsEnum(GenderEnum, { message: 'gender must be one of: male, female, both' })
   gender: GenderEnum;
-  @ApiProperty({
-    description: 'Stock quantity of the product',
-    minimum: 0,
-    example: 100,
-  })
-  @IsNotEmpty()
-  @IsInt()
-  @Type(() => Number)
-  stock: number;
 }

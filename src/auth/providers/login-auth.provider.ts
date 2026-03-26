@@ -13,7 +13,7 @@ export class LoginAuthProvider {
     private readonly generateJwtToken: GenerateJwtProvider,
   ) {}
   public async login(loginDto: LoginDto) {
-    const user = await this.userService.getOneUserByEmil(loginDto.email);
+    const user = await this.userService.getOneUserByEmail(loginDto.email);
 
     const isMatch = await this.hashingProvider.comparePassword(
       loginDto.password,

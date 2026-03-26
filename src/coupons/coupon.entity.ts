@@ -17,7 +17,7 @@ export class Coupon {
   percentage: number;
   @Column('int', { default: 0 })
   numberOfUse: number;
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', { precision: 10, scale: 2, nullable: true })
   amountOfOrdersDiscount: number;
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
