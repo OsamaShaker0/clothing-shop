@@ -12,6 +12,7 @@ import {
 import { GenderEnum } from './enums/product-gender.enum';
 import { ProductTypeEnum } from './enums/product-type.enum';
 import { ProductVariant } from './productVariant.entity';
+import { Review } from 'src/review/review.entity';
 
 @Entity()
 export class Product {
@@ -54,6 +55,8 @@ export class Product {
     cascade: true,
   })
   variants: ProductVariant[];
+  @OneToMany(() => Review, (review) => review.product, { eager: true })
+  reviews: Review[];
   @CreateDateColumn()
   createdAt: Date;
 

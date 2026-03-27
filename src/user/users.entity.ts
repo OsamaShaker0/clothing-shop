@@ -3,12 +3,14 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { UserGender } from './enums/user-gender.enum';
 import { UserRole } from './enums/user-roles.enum';
 import { Exclude } from 'class-transformer';
+import { Review } from 'src/review/review.entity';
 
 @Entity()
 export class Users {
@@ -33,6 +35,8 @@ export class Users {
   age?: number;
   @Column({ type: 'varchar', nullable: true })
   governorate?: string;
+  @OneToMany(() => Review, (review) => review.user)
+  reviews: Review;
   @CreateDateColumn()
   createdAt: Date;
   @UpdateDateColumn()

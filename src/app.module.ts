@@ -17,6 +17,7 @@ import { AuthGuard } from './auth/guards/auth.guard';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { CouponsModule } from './coupons/coupons.module';
+import { ReviewModule } from './review/review.module';
 
 let ENV = process.env.NODE_ENV;
 
@@ -61,6 +62,7 @@ let ENV = process.env.NODE_ENV;
     CloudinaryModule,
     DashboardModule,
     CouponsModule,
+    ReviewModule,
   ],
   controllers: [],
   providers: [{ provide: APP_GUARD, useClass: AuthGuard }],

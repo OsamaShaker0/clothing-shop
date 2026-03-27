@@ -42,16 +42,21 @@ export class OwnerOrAdminGuard implements CanActivate {
       throw new ForbiddenException('Resource Not Found');
     }
 
-    if (ownerField.length > 1) {
-      if (
+    // Check ownership
+    let isOwner = false;
+    if (typeof ownerField === 'string') {
+      isOwner = record[ownerField] === actor.sub;
+    } else {
+      // array length 2 guaranteed
+      isOwner =
         record[ownerField[0]] === actor.sub ||
-        record[ownerField[1]] === actor.sub
-      ) {
-        return true;
-      }
-    } else if (record[ownerField as string] !== actor.sub) {
+        record[ownerField[1]] === actor.sub;
+    }
+
+    if (!isOwner) {
       throw new ForbiddenException('Not Allowed');
     }
+
     return true;
   }
 }
