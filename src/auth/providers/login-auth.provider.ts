@@ -15,6 +15,9 @@ export class LoginAuthProvider {
   public async login(loginDto: LoginDto) {
     const user = await this.userService.getOneUserByEmail(loginDto.email);
 
+    if (!user.isEmailVerified) {
+      throw new UnauthorizedException('Email is not verified');
+    }
     const isMatch = await this.hashingProvider.comparePassword(
       loginDto.password,
       user.password,

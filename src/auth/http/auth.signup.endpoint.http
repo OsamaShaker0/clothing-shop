@@ -4,13 +4,12 @@ POST http://localhost:3000/auth/signup
 Content-Type  : application/json
 
 {
-    "firstName" : "malik",
-    "lastName" : "abdelfatah",
-    "email" : "malik@gmail.com",
-    "password" : "Password1@",
+    "firstName" : "semo",
+    "lastName" : "shakerr",
+    "email" : "shakerosama277@gmail.com",
+    "password" : "Password1!",
     "gender" : "male",
     "age" : 17,
-    "governorate" : "cairo",
-    "role" : "admin"
+    "governorate" : "cairo"
 
 }

@@ -6,24 +6,24 @@ A full-featured **E-commerce backend** built with **NestJS**, supporting authent
 
 ## 🚀 Features
 
-* 🔐 JWT Authentication & Authorization
-* 👥 Role-based Access Control (Admin / User)
-* 🛍️ Products & Variants (color, size, stock)
-* 🛒 Shopping Cart system
-* 📦 Orders & Order Items (snapshot-based)
-* 🎟️ Coupon system (percentage & free delivery)
-* 📊 Scalable & clean architecture
+- 🔐 JWT Authentication & Authorization
+- 👥 Role-based Access Control (Admin / User)
+- 🛍️ Products & Variants (color, size, stock)
+- 🛒 Shopping Cart system
+- 📦 Orders & Order Items (snapshot-based)
+- 🎟️ Coupon system (percentage & free delivery)
+- 📊 Scalable & clean architecture
 
 ---
 
 ## 🧱 Tech Stack
 
-* **Backend:** NestJS
-* **Database:** PostgreSQL
-* **ORM:** TypeORM
-* **Auth:** JWT
-* **Validation:** class-validator
-* **File Upload:** Cloudinary
+- **Backend:** NestJS
+- **Database:** PostgreSQL
+- **ORM:** TypeORM
+- **Auth:** JWT
+- **Validation:** class-validator
+- **File Upload:** Cloudinary
 
 ---
 
@@ -45,7 +45,7 @@ src/
 │
 ├── utils/
 │   ├── pagination/
-│   
+│
 │── app.module.ts
 └── main.ts
 ```
@@ -54,10 +54,10 @@ src/
 
 ## 🔐 Authentication & Authorization
 
-* All routes are **protected by default**
-* Public routes using `@Public()`
-* Role-based access using `@Roles('admin')`
-* JWT used for authentication
+- All routes are **protected by default**
+- Public routes using `@Public()`
+- Role-based access using `@Roles('admin')`
+- JWT used for authentication
 
 ---
 
@@ -86,14 +86,14 @@ src/
 
 Supports:
 
-* Percentage discount
-* Free delivery
+- Percentage discount
+- Free delivery
 
 Tracks:
 
-* Usage count
-* Total used amount
-* Total discount given
+- Usage count
+- Total used amount
+- Total discount given
 
 ---
 
@@ -149,6 +149,15 @@ NEW_ARRIVALS_DAYS=
 NEW_ARRIVALS_LIMIT=
 ```
 
+# Email configuration for sending verification and notification emails
+
+```env
+EMAIL_HOST=smtp.example.com
+EMAIL_PORT=587
+EMAIL_USER=your_email@example.com
+EMAIL_PASS=your_email_password
+```
+
 ---
 
 ### ✅ Example `.env`
@@ -168,6 +177,12 @@ SHIPPING_PRICE=50
 BEST_SELLER_NUMBER=10
 NEW_ARRIVALS_DAYS=7
 NEW_ARRIVALS_LIMIT=8
+
+
+EMAIL_HOST=smtp.example.com
+EMAIL_PORT=587
+EMAIL_USER=your_email@example.com
+EMAIL_PASS=your_email_password
 ```
 
 ---
@@ -192,20 +207,18 @@ npm run start:dev
 
 ## 🧠 Important Concepts
 
-* Orders store **snapshot data** (price, size, color)
-* Never trust client-side price
-* Always validate stock before checkout
-* Use transactions in checkout process
+- Orders store **snapshot data** (price, size, color)
+- Never trust client-side price
+- Always validate stock before checkout
+- Use transactions in checkout process
 
 ---
 
-
-
 ## 🔮 Future Improvements
 
-* 📦 Order tracking system
-* 🖥️ Admin dashboard
-* ⭐ Product reviews & ratings
+- 📦 Order tracking system
+- 🖥️ Admin dashboard
+- ⭐ Product reviews & ratings
 
 ---
 

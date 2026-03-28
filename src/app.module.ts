@@ -18,6 +18,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { CouponsModule } from './coupons/coupons.module';
 import { ReviewModule } from './review/review.module';
+import { EmailsModule } from './emails/emails.module';
+import appConfig from './config/app.config';
 
 let ENV = process.env.NODE_ENV;
 
@@ -26,7 +28,7 @@ let ENV = process.env.NODE_ENV;
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: !ENV ? '.env' : `.env.${ENV}`,
-      load: [databaseConfig, cloudinaryConfig, jwtConfig],
+      load: [databaseConfig, cloudinaryConfig, jwtConfig, appConfig],
       validationSchema: environmentValidations,
     }),
     TypeOrmModule.forRootAsync({
@@ -63,6 +65,7 @@ let ENV = process.env.NODE_ENV;
     DashboardModule,
     CouponsModule,
     ReviewModule,
+    EmailsModule,
   ],
   controllers: [],
   providers: [{ provide: APP_GUARD, useClass: AuthGuard }],

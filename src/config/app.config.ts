@@ -6,4 +6,8 @@ export default registerAs('app', () => ({
   bestSellerNumber: Number(process.env.BEST_SELLER_NUMBER) ?? 10,
   newArrivalsDays: Number(process.env.NEW_ARRIVALS_DAYS) ?? 30,
   newArrivalsLimit: Number(process.env.NEW_ARRIVALS_LIMIT) ?? 20,
+  emailHost: process.env.EMAIL_HOST,
+  emailPort: Number(process.env.EMAIL_PORT),
+  emailUser:process.env.EMAIL_USER,
+  emailPass: process.env.EMAIL_PASS,
 }));

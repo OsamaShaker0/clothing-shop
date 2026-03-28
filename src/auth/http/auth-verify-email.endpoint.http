@@ -1,0 +1,7 @@
+POST http://localhost:3000/auth/verify-email
+Content-Type : application/json
+{
+    "email" :"shakerosama277@gmail.com",
+    "verifyCode":"lIAKpUMCTHNUoptK"
+    
+}
