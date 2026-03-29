@@ -35,6 +35,10 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import type { Request } from 'express';
+import { FindCategoryDto } from './dtos/find-all-query.dto';
+import { Category } from './categories.entity';
+
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('Categories')
 @Controller('category')
@@ -67,25 +71,28 @@ export class CategoryController {
   }
   @Get()
   @Public()
-  @ApiOperation({ summary: 'Get all categories (Public)' })
-  @ApiQuery({ name: 'page', required: false, example: 1 })
-  @ApiQuery({ name: 'limit', required: false, example: 10 })
-  @ApiQuery({ name: 'sortBy', required: false, example: 'createdAt' })
-  @ApiQuery({
-    name: 'order',
-    required: false,
-    enum: ['ASC', 'DESC'],
-    example: 'ASC',
+  @ApiOperation({ summary: 'Get all categories (with pagination & search)' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of categories with pagination',
   })
-  @ApiQuery({ name: 'name', required: false, example: 'first one' })
-  @ApiQuery({ name: 'slug', required: false, example: 'first-one' })
-  @ApiResponse({ status: 200, description: 'List of products with pagination' })
-  @ApiResponse({ status: 200, description: 'List of categories' })
   public async getAllCategories(
     @Req() req: Request,
-    @Query() paginationQueryDto: PaginationQueryDto,
+    @Query() findCategoryDto: FindCategoryDto,
   ) {
-    return this.categoryService.findAllCategories(req, paginationQueryDto);
+    return this.categoryService.findAllCategories(findCategoryDto, req);
+  }
+  @Get('non-active')
+  @UseGuards(AdminAccessOnlyGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get all non-active categories (Admin only)' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of non-active categories',
+    type: [Category],
+  })
+  public async getNonActive() {
+    return this.categoryService.findNonActiveCategories();
   }
   @Get(':categoryId')
   @Public()

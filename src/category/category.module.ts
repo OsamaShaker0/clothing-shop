@@ -9,6 +9,7 @@ import { GetCategoriesProvider } from './providers/get-categories.provider';
 import { GetOneCategoryProvider } from './providers/get-one-category.provider';
 import { UpdateCategoryProvider } from './providers/update-category.provider';
 import { DeleteCategoryProvider } from './providers/delete-category.provider';
+import { GetNonActiveCategoriesProvider } from './providers/get-non-active-categories.provider';
 
 @Module({
   controllers: [CategoryController],
@@ -19,6 +20,7 @@ import { DeleteCategoryProvider } from './providers/delete-category.provider';
     GetOneCategoryProvider,
     UpdateCategoryProvider,
     DeleteCategoryProvider,
+    GetNonActiveCategoriesProvider,
   ],
   imports: [TypeOrmModule.forFeature([Category, Product])],
   exports: [CategoryService],

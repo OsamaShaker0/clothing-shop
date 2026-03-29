@@ -8,16 +8,15 @@ import { GetCategoriesProvider } from './get-categories.provider';
 import { GetOneCategoryProvider } from './get-one-category.provider';
 import { UpdateCategoryProvider } from './update-category.provider';
 import { DeleteCategoryProvider } from './delete-category.provider';
-import { queryWithPagination } from 'src/utils/pagination/query-builder';
-import { InjectRepository } from '@nestjs/typeorm';
-import { PaginationQueryDto } from 'src/utils/pagination/dto/pagination-query.dto';
-import { Repository } from 'typeorm';
+
+import { Request } from 'express';
+import { GetNonActiveCategoriesProvider } from './get-non-active-categories.provider';
 
 @Injectable()
 export class CategoryService {
   constructor(
-    @InjectRepository(Category)
-    private readonly categoryRepository: Repository<Category>,
+    private readonly getCategoriesProvider: GetCategoriesProvider,
+    private readonly getNonActiveCategoriesProvider: GetNonActiveCategoriesProvider,
     private readonly createCategoryProvider: CreateCategoryProvider,
     private readonly getOneCategoryProvider: GetOneCategoryProvider,
     private readonly updateCategoryProvider: UpdateCategoryProvider,
@@ -29,11 +28,17 @@ export class CategoryService {
   ) {
     return this.createCategoryProvider.createCategory(createCategoryDto, file);
   }
-  public async findAllCategories(request, dto: PaginationQueryDto) {
-    return queryWithPagination(request, this.categoryRepository, dto);
+  public async findAllCategories(
+    findCategoryDto: FindCategoryDto,
+    req: Request,
+  ) {
+    return this.getCategoriesProvider.findAllCategories(findCategoryDto, req);
   }
   public async findOneCategoryById(id: string): Promise<Category> {
     return await this.getOneCategoryProvider.findOneCategoryById(id);
+  }
+  public async findNonActiveCategories() {
+    return await this.getNonActiveCategoriesProvider.getNonActiveCategories();
   }
   public async editCategory(id: string, editCategoryDto: EditCategoryDto) {
     return this.updateCategoryProvider.updateCategory(id, editCategoryDto);
