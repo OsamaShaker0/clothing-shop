@@ -19,6 +19,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { CouponsModule } from './coupons/coupons.module';
 import { ReviewModule } from './review/review.module';
 import { EmailsModule } from './emails/emails.module';
+import { AppController } from './app.controller';
 import appConfig from './config/app.config';
 
 let ENV = process.env.NODE_ENV;
@@ -67,7 +68,7 @@ let ENV = process.env.NODE_ENV;
     ReviewModule,
     EmailsModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [{ provide: APP_GUARD, useClass: AuthGuard }],
 })
 export class AppModule {}
