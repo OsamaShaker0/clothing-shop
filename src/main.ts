@@ -3,11 +3,14 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ResponseStructureInterceptor } from './utils/responseStructure/response-structure.interceptor';
+import { ResponseExceptionFilter } from './utils/exceptionFilter/exception-filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(helmet());
-  // app.enableCors();  after make frontend
+  app.enableCors();
+  app.useGlobalFilters(new ResponseExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -16,6 +19,7 @@ async function bootstrap() {
     }),
   );
 
+  app.useGlobalInterceptors(new ResponseStructureInterceptor());
   // Config swagger
   const config = new DocumentBuilder()
     .setTitle('Clothing-E-commerce-API')
