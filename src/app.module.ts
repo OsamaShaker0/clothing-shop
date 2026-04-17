@@ -21,6 +21,7 @@ import { ReviewModule } from './review/review.module';
 import { EmailsModule } from './emails/emails.module';
 import { AppController } from './app.controller';
 import appConfig from './config/app.config';
+import messagesConfig from './config/messages.config';
 
 let ENV = process.env.NODE_ENV;
 
@@ -29,7 +30,13 @@ let ENV = process.env.NODE_ENV;
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: !ENV ? '.env' : `.env.${ENV}`,
-      load: [databaseConfig, cloudinaryConfig, jwtConfig, appConfig],
+      load: [
+        databaseConfig,
+        cloudinaryConfig,
+        jwtConfig,
+        appConfig,
+        messagesConfig,
+      ],
       validationSchema: environmentValidations,
     }),
     TypeOrmModule.forRootAsync({

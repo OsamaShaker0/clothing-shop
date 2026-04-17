@@ -13,9 +13,17 @@ import { OrderDashboardController } from './order-dashboard.controller';
 import { UsersDashboardController } from './users-dashboard.controller';
 import { CouponDashboardController } from './coupon-dashboard.controller';
 import { CouponsModule } from 'src/coupons/coupons.module';
+import { MessageController } from './message.controller';
 
 @Module({
-  imports: [UserModule, CategoryModule, ProductModule, CartModule, OrderModule , CouponsModule],
+  imports: [
+    UserModule,
+    CategoryModule,
+    ProductModule,
+    CartModule,
+    OrderModule,
+    CouponsModule,
+  ],
   controllers: [
     CategoryDashboardController,
     ProductDashboardController,
@@ -24,6 +32,7 @@ import { CouponsModule } from 'src/coupons/coupons.module';
     OrderDashboardController,
     UsersDashboardController,
     CouponDashboardController,
+    MessageController,
   ],
 })
 export class DashboardModule {}

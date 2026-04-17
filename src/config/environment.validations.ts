@@ -1,4 +1,5 @@
 import * as Joi from 'joi';
+import { join } from 'path';
 
 export default Joi.object({
   NODE_ENV: Joi.string()
@@ -23,6 +24,7 @@ export default Joi.object({
   SHIPPING_PRICE: Joi.number().default(100),
   EMAIL_HOST: Joi.string().required(),
   EMAIL_PORT: Joi.number().required().default(587),
-  EMAIL_USER : Joi.string().required(),
-  EMAIL_PASS : Joi.string().required()
+  EMAIL_USER: Joi.string().required(),
+  EMAIL_PASS: Joi.string().required(),
+  MESSAGE_CONTENT: Joi.string().default('welcome'),
 });
